@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="技巧," />
 
 
 
@@ -90,12 +90,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="#Linus的链表首先放链接：[ TED演讲—Linus ]偶然看到了这个TED，看到Linus聚聚的神一般的链表删除操作，不用分情况讨论，简直是大开眼界……有感而发，写下一篇博文写下感受。最好还是先看下TED～听Linus聚聚谈人生是一种享受。我们先假定我们的API设计是链表结构完全有序的插入。也就是，每次插入都插入在完全正确、使链表有序的位置上。如果我们调用insert(5)插入在[1, 2,">
+<meta name="keywords" content="技巧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linus的链表">
+<meta property="og:url" content="http://yoursite.com/2017/04/25/Linus的链表/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="#Linus的链表首先放链接：[ TED演讲—Linus ]偶然看到了这个TED，看到Linus聚聚的神一般的链表删除操作，不用分情况讨论，简直是大开眼界……有感而发，写下一篇博文写下感受。最好还是先看下TED～听Linus聚聚谈人生是一种享受。我们先假定我们的API设计是链表结构完全有序的插入。也就是，每次插入都插入在完全正确、使链表有序的位置上。如果我们调用insert(5)插入在[1, 2,">
+<meta property="og:updated_time" content="2017-04-25T01:28:43.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="Linus的链表">
+<meta name="twitter:description" content="#Linus的链表首先放链接：[ TED演讲—Linus ]偶然看到了这个TED，看到Linus聚聚的神一般的链表删除操作，不用分情况讨论，简直是大开眼界……有感而发，写下一篇博文写下感受。最好还是先看下TED～听Linus聚聚谈人生是一种享受。我们先假定我们的API设计是链表结构完全有序的插入。也就是，每次插入都插入在完全正确、使链表有序的位置上。如果我们调用insert(5)插入在[1, 2,">
 
 
 
@@ -123,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/25/Linus的链表/"/>
 
 
 
 
 
-  <title>Hexo</title>
+  <title>Linus的链表 | Hexo</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -154,9 +159,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -239,9 +242,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -271,10 +274,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2017/04/25/Linus的链表/" itemprop="url">
-                  Linus的链表
-                </a>
+                Linus的链表
               
             
           </h1>
@@ -324,175 +324,75 @@
       
 
       
-        
-          
-            <p>#Linus的链表<br>首先放链接：[ TED演讲—Linus ]<br>偶然看到了这个TED，看到Linus聚聚的神一般的链表删除操作，不用分情况讨论，简直是大开眼界……有感而发，写下一篇博文写下感受。最好还是先看下TED～听Linus聚聚谈人生是一种享受。<br>我们先假定我们的API设计是链表结构完全有序的插入。也就是，每次插入都插入在完全正确、使链表有序的位置上。如果我们调用<code>insert(5)</code>插入在<code>[1, 2, 6, 7]</code>的链表上，那么链表最终会变成<code>[1, 2, 5, 6, 7]</code>的状态。<br>按照我们正常的思维，链表应该是这样的：<br>（注：一个结点上一行是结点名称，下一行是类型名称。）<br>(img)<br>(img)<br>于是我们有了两种情况。但是实际上仔细一看，第二种<code>NULL</code>的情况是包含在第一种之中的。因为我们移动链表指针的时候，一定是做<code>while(temp &amp;&amp; temp-&gt;data &lt; target_data)</code>形式的循环体的。也就是：最终<code>temp</code>一定会停留在<code>NULL</code>或者<code>≥target_data</code>的第一个位置的。也就是，插入的正确位置。所以其实两种情况是一样的。因此我们只需要看第一种就好。于是就如下图：<br>(img)<br>1.这里是我们在头结点插入的情况。非常简单啊。因为我们插入<code>0</code>，那么<code>temp</code>最终必然在<code>1</code>的位置上了。这样，我们只要利用<code>head</code>结点，就可以完成插入操作啦！<br>(img)<br>2.这里是我们在中间插入的情况。我们要插入<code>4</code>这个数。但是因为我们的<code>temp</code>正好就在需要插入的位置，也就是<code>new Node</code>的<code>next</code>有着落啦。但是我们的前一个结点必须重定位到新插入的<code>new Node</code>上去。可是我们并没有这种<code>pre</code>指针。也就是，仅仅使用一个指针，<code>3</code>这个点根本没法衔接到<code>4</code>的身上。好麻烦啊！于是解决办法就是，我们必须要使用一个<code>pre</code>和一个<code>next</code>指针来定位辅助操作，像这样：<br>(img)<br>卧槽。这简直神烦啊。光是插入操作就需要两种讨论=&gt;头插和中间插。鉴于尾插和中间插是相同的（也就是<code>next</code>指针是<code>NULL</code>而已），可以省略尾插的讨论。那删除呢？删除也是一样的。头删除和中间删除。Linus在TED中说，头删除和中间删除是两种完全不同的情况。确实如此。。。（掀桌）</p>
+        <p>#Linus的链表<br>首先放链接：[ TED演讲—Linus ]<br>偶然看到了这个TED，看到Linus聚聚的神一般的链表删除操作，不用分情况讨论，简直是大开眼界……有感而发，写下一篇博文写下感受。最好还是先看下TED～听Linus聚聚谈人生是一种享受。<br>我们先假定我们的API设计是链表结构完全有序的插入。也就是，每次插入都插入在完全正确、使链表有序的位置上。如果我们调用<code>insert(5)</code>插入在<code>[1, 2, 6, 7]</code>的链表上，那么链表最终会变成<code>[1, 2, 5, 6, 7]</code>的状态。<br>按照我们正常的思维，链表应该是这样的：<br>（注：一个结点上一行是结点名称，下一行是类型名称。）<br>(img)<br>(img)<br>于是我们有了两种情况。但是实际上仔细一看，第二种<code>NULL</code>的情况是包含在第一种之中的。因为我们移动链表指针的时候，一定是做<code>while(temp &amp;&amp; temp-&gt;data &lt; target_data)</code>形式的循环体的。也就是：最终<code>temp</code>一定会停留在<code>NULL</code>或者<code>≥target_data</code>的第一个位置的。也就是，插入的正确位置。所以其实两种情况是一样的。因此我们只需要看第一种就好。于是就如下图：<br>(img)<br>1.这里是我们在头结点插入的情况。非常简单啊。因为我们插入<code>0</code>，那么<code>temp</code>最终必然在<code>1</code>的位置上了。这样，我们只要利用<code>head</code>结点，就可以完成插入操作啦！<br>(img)<br>2.这里是我们在中间插入的情况。我们要插入<code>4</code>这个数。但是因为我们的<code>temp</code>正好就在需要插入的位置，也就是<code>new Node</code>的<code>next</code>有着落啦。但是我们的前一个结点必须重定位到新插入的<code>new Node</code>上去。可是我们并没有这种<code>pre</code>指针。也就是，仅仅使用一个指针，<code>3</code>这个点根本没法衔接到<code>4</code>的身上。好麻烦啊！于是解决办法就是，我们必须要使用一个<code>pre</code>和一个<code>next</code>指针来定位辅助操作，像这样：<br>(img)<br>卧槽。这简直神烦啊。光是插入操作就需要两种讨论=&gt;头插和中间插。鉴于尾插和中间插是相同的（也就是<code>next</code>指针是<code>NULL</code>而已），可以省略尾插的讨论。那删除呢？删除也是一样的。头删除和中间删除。Linus在TED中说，头删除和中间删除是两种完全不同的情况。确实如此。。。（掀桌）</p>
 <p>于是Linus大神给我们了另一种方法！！利用二级指针！<br>简洁起见，先上图讨论链表的改版：<br>(img)<br>(img)<br>（请注意指针指向的位置）<br>如图我们看到，不同于正常链表在于，这里创建了一个<code>Node**</code>类型的指针。这个指针有神马用处呢？特别神奇。因为它能够帮助我们使用类似“隔山打牛”的手段，<strong>远程地</strong>操纵链表结构，达到不必在插入和删除的时候需要分情况讨论的效果。<br>首先我们由图中可以看到。<code>head</code>结点一定是<code>Node*</code>类型的指针，不必多说。而我们在<code>head</code>的上边又创建了一个<code>Node**</code>的指针指向了<code>head</code>。和刚才正常思路的讨论不同的是，这里的<code>temp</code>是<code>Node**</code>类型了。当我们插入的时候，循环判断的条件变成了：<code>while(*temp &amp;&amp; (*temp)-&gt;data &lt; target_data)</code>了。其实和刚才的<code>while(temp &amp;&amp; data &lt; target_data)</code>是一样的。但是不同的是：<strong>这时的<code>temp</code>的位置，由正好指向“需要插入位置”的尴尬位置变成了“指向那个尴尬位置的位置”！也就是说，我们的<code>pre</code>结点有着落了！</strong>接下来，我们还继续讨论头插和中间插两种情况：先二话不说上图 =。=！<br>(img)<br>1.头插。<br>可不要以为和上边的图是一样的。其实我只是把里边结点值改成了<code>1</code>、<code>3</code>和<code>5</code>而已（大雾）<br>于是我们可以看见，原先的情况是，如果我（<code>Node*</code>）判断成功，我就挪到跟我判断的结点的位置，这样就保证了退出循环时<code>temp</code>一定是在需要插入的位置，这就非常尴尬了。然而，经由我们的新的判断条件<code>(*temp)-&gt;data &lt; target_data</code>，我们是在远程发动解引用的能力判断大小的，我们<code>temp</code>的类型是<code>Node**</code>，因此最后一定会指向一个<code>next (Node*类型)</code>指针的。因此，最终退出循环的时候，<code>temp</code>一定是在需要插入结点的前边！因此可以完美解决～<br>2.中间插<br>(img)<br>按照刚才的分析，<code>temp</code>一定会停留在这里～于是<code>pre</code>指针就有啦！有了<code>pre</code>，还怕没有<code>next</code>吗？所以轻松地，根本不需要第二个一级指针，只需要一个二级指针就可以完美解决啦～～二话不说上图！<br>(img)<br>最后的<code>next</code>指针是可以经由<code>pre</code>指针得到的！所以，经由这样的操作，我们根本就不需要第二个指针啦！也就是，我们只需要讨论一种情况，就可以完整地把头插和中间插合二为一咯！</p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <div>
+      
+        
+
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/25/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zhengxiaolin">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/25/hello-world/" itemprop="url">
-                  Hello World
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-25T00:09:19+08:00">
-                2017-04-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/技巧/" rel="tag"># 技巧</a>
           
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
         
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
       
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/25/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
 
       
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -500,6 +400,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -704,6 +608,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
 
   
 
