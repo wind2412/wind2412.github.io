@@ -270,6 +270,138 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/21/信号量和管程笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wind2412">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blue_sky.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wind2412的部落格✨～">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/06/21/信号量和管程笔记/" itemprop="url">
+                  信号量和管程笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-21T16:30:01+08:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最后一篇啦。其实内存、进程和这篇都是今天一天写的。明天要开始复习了TAT</p>
+<p>信号量和管程是很有意思的，因为我只是进行了理解，然而实现因为操作系统<code>OS concept</code>上都有伪代码……而且几乎和真实代码差不多少，所以就可以愉快地写（chao）了！哈哈哈哈哈哈！最后还顺便模拟了一个生产者消费者问题。</p>
+<ul>
+<li>Extra Reference：</li>
+<li><a href="https://wenku.baidu.com/view/3cf2e85c195f312b3069a57d.html" target="_blank" rel="external">https://wenku.baidu.com/view/3cf2e85c195f312b3069a57d.html</a>    管程的概念及实现    这个非常好！！！</li>
+<li><a href="https://www.zhihu.com/question/30641734" target="_blank" rel="external">https://www.zhihu.com/question/30641734</a>                        《应该如何理解管程》</li>
+<li><a href="http://blog.forec.cn/2016/11/24/os-concepts-6/" target="_blank" rel="external">http://blog.forec.cn/2016/11/24/os-concepts-6/</a>                管程的实现</li>
+</ul>
+<p>这是在<code>monitor.h</code>中我记录的reference，推荐一看！写的非常好，无论是哪篇文章。</p>
+<p>重点内容其实在于关闭中断形成<strong>原子操作</strong>。对于这个只使用了一个CPU的，使用汇编<code>cli</code>和<code>sti</code>就可以关闭和开启中断了。这样，就可以保证了原子执行函数了～</p>
+<p>具体实现请自行查看代码咯～信号量——<code>P</code>，<code>V</code>操作，管程：<code>enter</code>, <code>wait</code>, <code>signal</code>, 以及<code>leave</code>操作。</p>
+<p>嗯，懒得写啦！就写到这里吧～纪念下我这个5k行的小kernel～</p>
+<p>接下来我要入FP坑啦～haskell等着我！还有编译，lua等着我！哈哈哈！</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/21/进程笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -955,7 +1087,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

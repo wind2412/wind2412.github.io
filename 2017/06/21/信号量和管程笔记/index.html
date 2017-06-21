@@ -75,7 +75,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="操作系统," />
 
 
 
@@ -91,12 +91,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="wind2412的部落格✨～">
-<meta property="og:url" content="http://yoursite.com/archives/2017/05/index.html">
+<meta name="description" content="最后一篇啦。其实内存、进程和这篇都是今天一天写的。明天要开始复习了TAT 信号量和管程是很有意思的，因为我只是进行了理解，然而实现因为操作系统OS concept上都有伪代码……而且几乎和真实代码差不多少，所以就可以愉快地写（chao）了！哈哈哈哈哈哈！最后还顺便模拟了一个生产者消费者问题。  Extra Reference： https://wenku.baidu.com/view/3cf2e8">
+<meta name="keywords" content="操作系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="信号量和管程笔记">
+<meta property="og:url" content="http://yoursite.com/2017/06/21/信号量和管程笔记/index.html">
 <meta property="og:site_name" content="wind2412的部落格✨～">
+<meta property="og:description" content="最后一篇啦。其实内存、进程和这篇都是今天一天写的。明天要开始复习了TAT 信号量和管程是很有意思的，因为我只是进行了理解，然而实现因为操作系统OS concept上都有伪代码……而且几乎和真实代码差不多少，所以就可以愉快地写（chao）了！哈哈哈哈哈哈！最后还顺便模拟了一个生产者消费者问题。  Extra Reference： https://wenku.baidu.com/view/3cf2e8">
+<meta property="og:updated_time" content="2017-06-21T08:31:06.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="wind2412的部落格✨～">
+<meta name="twitter:title" content="信号量和管程笔记">
+<meta name="twitter:description" content="最后一篇啦。其实内存、进程和这篇都是今天一天写的。明天要开始复习了TAT 信号量和管程是很有意思的，因为我只是进行了理解，然而实现因为操作系统OS concept上都有伪代码……而且几乎和真实代码差不多少，所以就可以愉快地写（chao）了！哈哈哈哈哈哈！最后还顺便模拟了一个生产者消费者问题。  Extra Reference： https://wenku.baidu.com/view/3cf2e8">
 
 
 
@@ -124,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2017/05/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/21/信号量和管程笔记/"/>
 
 
 
 
 
-  <title>归档 | wind2412的部落格✨～</title>
+  <title>信号量和管程笔记 | wind2412的部落格✨～</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -174,7 +179,7 @@
     
   
 
-  <div class="container sidebar-position-left  page-archive  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -258,66 +263,167 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 6 篇日志。 继续努力。
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/21/信号量和管程笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wind2412">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blue_sky.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wind2412的部落格✨～">
     </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                信号量和管程笔记
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-21T16:30:01+08:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
 
       
       
-      
 
+      
+        <p>最后一篇啦。其实内存、进程和这篇都是今天一天写的。明天要开始复习了TAT</p>
+<p>信号量和管程是很有意思的，因为我只是进行了理解，然而实现因为操作系统<code>OS concept</code>上都有伪代码……而且几乎和真实代码差不多少，所以就可以愉快地写（chao）了！哈哈哈哈哈哈！最后还顺便模拟了一个生产者消费者问题。</p>
+<ul>
+<li>Extra Reference：</li>
+<li><a href="https://wenku.baidu.com/view/3cf2e85c195f312b3069a57d.html" target="_blank" rel="external">https://wenku.baidu.com/view/3cf2e85c195f312b3069a57d.html</a>    管程的概念及实现    这个非常好！！！</li>
+<li><a href="https://www.zhihu.com/question/30641734" target="_blank" rel="external">https://www.zhihu.com/question/30641734</a>                        《应该如何理解管程》</li>
+<li><a href="http://blog.forec.cn/2016/11/24/os-concepts-6/" target="_blank" rel="external">http://blog.forec.cn/2016/11/24/os-concepts-6/</a>                管程的实现</li>
+</ul>
+<p>这是在<code>monitor.h</code>中我记录的reference，推荐一看！写的非常好，无论是哪篇文章。</p>
+<p>重点内容其实在于关闭中断形成<strong>原子操作</strong>。对于这个只使用了一个CPU的，使用汇编<code>cli</code>和<code>sti</code>就可以关闭和开启中断了。这样，就可以保证了原子执行函数了～</p>
+<p>具体实现请自行查看代码咯～信号量——<code>P</code>，<code>V</code>操作，管程：<code>enter</code>, <code>wait</code>, <code>signal</code>, 以及<code>leave</code>操作。</p>
+<p>嗯，懒得写啦！就写到这里吧～纪念下我这个5k行的小kernel～</p>
+<p>接下来我要入FP坑啦～haskell等着我！还有编译，lua等着我！哈哈哈！</p>
+
+      
+    </div>
+
+    <div>
       
         
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2017">2017</h2>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/操作系统/" rel="tag"># 操作系统</a>
+          
         </div>
       
+
+      
+        
       
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          <span class="post-nav-divider"></span>
 
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/05/16/中断笔记/" itemprop="url">
-              
-                <span itemprop="name">中断笔记</span>
-              
-            </a>
-        
-      </h1>
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/21/进程笔记/" rel="prev" title="进程笔记">
+                进程笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-05-16T00:46:04+08:00"
-              content="2017-05-16" >
-          05-16
-        </time>
-      </div>
-
-    </header>
+      
+      
+    </footer>
   </article>
 
 
 
-    
-
-  </section>
-
-  
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -325,6 +431,14 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="uyan_frame"></div>
+    
+  </div>
+
+
+
 
         </div>
         
@@ -548,11 +662,9 @@
 
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
 
 
   
@@ -585,6 +697,10 @@
   
     
 
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2131821"></script>
+      <!-- UY END -->
     
   
 
