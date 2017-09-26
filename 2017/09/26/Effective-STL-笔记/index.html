@@ -108,18 +108,18 @@
 
 
 
-<meta name="description" content="第一章 容器  [1] vector、string (其实还应该有基于 heap 的 priority_queue 和 queue)这类连续容器的插入、删除会对所插入的位置的后边的所有迭代器、指针以及引用变得无效。而且，如果插入操作导致了容器扩容，将会使整个容器的迭代器、指针和引用全部失效。因此，一定要默认“vector、string 的插入和删除一定会造成所有迭代器、指针、引用失效”，这样才不">
+<meta name="description" content="第零章 前言建议：Effective STL 这本书非常有深度，在细节上尤为体现。建议读这本书之前，先仔细研读侯捷老师的《STL 源码剖析》，然后好好研究 sgi-stl 源码。对大致框架掌握仔细之后，可以阅读《Effective STL》加以查缺补漏以及更加精进。  第一章 容器  [1] vector、string (其实还应该有基于 heap 的 priority_queue 和 queue">
 <meta name="keywords" content="C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Effective STL 笔记">
 <meta property="og:url" content="http://yoursite.com/2017/09/26/Effective-STL-笔记/index.html">
 <meta property="og:site_name" content="wind2412的部落格✨～">
-<meta property="og:description" content="第一章 容器  [1] vector、string (其实还应该有基于 heap 的 priority_queue 和 queue)这类连续容器的插入、删除会对所插入的位置的后边的所有迭代器、指针以及引用变得无效。而且，如果插入操作导致了容器扩容，将会使整个容器的迭代器、指针和引用全部失效。因此，一定要默认“vector、string 的插入和删除一定会造成所有迭代器、指针、引用失效”，这样才不">
+<meta property="og:description" content="第零章 前言建议：Effective STL 这本书非常有深度，在细节上尤为体现。建议读这本书之前，先仔细研读侯捷老师的《STL 源码剖析》，然后好好研究 sgi-stl 源码。对大致框架掌握仔细之后，可以阅读《Effective STL》加以查缺补漏以及更加精进。  第一章 容器  [1] vector、string (其实还应该有基于 heap 的 priority_queue 和 queue">
 <meta property="og:image" content="https://wind2412.files.wordpress.com/2017/09/14e993cabe8749c98832f576b9f73c00.jpg?w=816&h=612&zoom=2">
-<meta property="og:updated_time" content="2017-09-26T12:05:07.000Z">
+<meta property="og:updated_time" content="2017-09-26T12:22:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Effective STL 笔记">
-<meta name="twitter:description" content="第一章 容器  [1] vector、string (其实还应该有基于 heap 的 priority_queue 和 queue)这类连续容器的插入、删除会对所插入的位置的后边的所有迭代器、指针以及引用变得无效。而且，如果插入操作导致了容器扩容，将会使整个容器的迭代器、指针和引用全部失效。因此，一定要默认“vector、string 的插入和删除一定会造成所有迭代器、指针、引用失效”，这样才不">
+<meta name="twitter:description" content="第零章 前言建议：Effective STL 这本书非常有深度，在细节上尤为体现。建议读这本书之前，先仔细研读侯捷老师的《STL 源码剖析》，然后好好研究 sgi-stl 源码。对大致框架掌握仔细之后，可以阅读《Effective STL》加以查缺补漏以及更加精进。  第一章 容器  [1] vector、string (其实还应该有基于 heap 的 priority_queue 和 queue">
 <meta name="twitter:image" content="https://wind2412.files.wordpress.com/2017/09/14e993cabe8749c98832f576b9f73c00.jpg?w=816&h=612&zoom=2">
 
 
@@ -363,7 +363,8 @@
       
 
       
-        <hr>
+        <h1 id="第零章-前言"><a href="#第零章-前言" class="headerlink" title="第零章 前言"></a>第零章 前言</h1><p>建议：Effective STL 这本书非常有深度，在细节上尤为体现。建议读这本书之前，先仔细研读侯捷老师的《STL 源码剖析》，然后好好研究 sgi-stl 源码。对大致框架掌握仔细之后，可以阅读《Effective STL》加以查缺补漏以及更加精进。</p>
+<hr>
 <h1 id="第一章-容器"><a href="#第一章-容器" class="headerlink" title="第一章 容器"></a>第一章 容器</h1><hr>
 <ol>
 <li>[1] vector、string (其实还应该有基于 heap 的 priority_queue 和 queue)这类连续容器的插入、删除会对所插入的位置的后边的所有迭代器、指针以及引用变得无效。而且，如果插入操作导致了容器扩容，将会使整个容器的迭代器、指针和引用全部失效。因此，一定要默认“vector、string 的插入和删除一定会造成所有迭代器、指针、引用失效”，这样才不会发生错误和 UB 行为。 [2] list、map、set、multimap、multiset 等等基于节点的容器(链表、红黑树) 上的插入、删除操作从来不会使任何迭代器、指针和引用发生无效(除了你指向一个正在删除的元素)。因此可以尽情使用。 [3] deque 比较特殊，它是唯一一个 “当插入操作发生在开头/末尾的时候，迭代器会发生无效，但是指针和引用不会发生无效的 STL 标准容器”。因为它基于浅拷贝来进行内存的复制。</li>
@@ -678,7 +679,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第一章-容器"><span class="nav-number">1.</span> <span class="nav-text">第一章 容器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第二章-vector-和-string"><span class="nav-number">2.</span> <span class="nav-text">第二章 vector 和 string</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第三章-关联容器"><span class="nav-number">3.</span> <span class="nav-text">第三章 关联容器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第四章-迭代器"><span class="nav-number">4.</span> <span class="nav-text">第四章 迭代器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第五章-算法"><span class="nav-number">5.</span> <span class="nav-text">第五章 算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第六章-函数子、函数子类及其他"><span class="nav-number">6.</span> <span class="nav-text">第六章 函数子、函数子类及其他</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第七章-在程序中使用-STL"><span class="nav-number">7.</span> <span class="nav-text">第七章 在程序中使用 STL</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第零章-前言"><span class="nav-number">1.</span> <span class="nav-text">第零章 前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第一章-容器"><span class="nav-number">2.</span> <span class="nav-text">第一章 容器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第二章-vector-和-string"><span class="nav-number">3.</span> <span class="nav-text">第二章 vector 和 string</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第三章-关联容器"><span class="nav-number">4.</span> <span class="nav-text">第三章 关联容器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第四章-迭代器"><span class="nav-number">5.</span> <span class="nav-text">第四章 迭代器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第五章-算法"><span class="nav-number">6.</span> <span class="nav-text">第五章 算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第六章-函数子、函数子类及其他"><span class="nav-number">7.</span> <span class="nav-text">第六章 函数子、函数子类及其他</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#第七章-在程序中使用-STL"><span class="nav-number">8.</span> <span class="nav-text">第七章 在程序中使用 STL</span></a></li></ol></div>
             
 
           </div>
