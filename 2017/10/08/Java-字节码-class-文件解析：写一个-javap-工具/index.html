@@ -1,0 +1,783 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JVM," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="我们的题目最近闲着没事想要了解一下 Java .class 文件的结构。然后想要对它进行一下解析。毕竟解析二进制码不是一件特别麻烦的事情，以前也干过，其实是非常有意思的。因此打算按照 JVM 规范对 .class 进行解析。总共用 C++ 写了不到 3k 行代码，应该能够按照 JVM 规范所说的进行完美的解析了。其实一点也不难，按照 JVM 规范的 $4 第四章给定的数据结构和规范进行直接对字节码">
+<meta name="keywords" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 字节码 .class 文件解析：写一个 javap 工具">
+<meta property="og:url" content="http://yoursite.com/2017/10/08/Java-字节码-class-文件解析：写一个-javap-工具/index.html">
+<meta property="og:site_name" content="wind2412的部落格✨～">
+<meta property="og:description" content="我们的题目最近闲着没事想要了解一下 Java .class 文件的结构。然后想要对它进行一下解析。毕竟解析二进制码不是一件特别麻烦的事情，以前也干过，其实是非常有意思的。因此打算按照 JVM 规范对 .class 进行解析。总共用 C++ 写了不到 3k 行代码，应该能够按照 JVM 规范所说的进行完美的解析了。其实一点也不难，按照 JVM 规范的 $4 第四章给定的数据结构和规范进行直接对字节码">
+<meta property="og:image" content="https://wind2412.files.wordpress.com/2017/10/img_0966.jpg?w=816&h=1088&zoom=2">
+<meta property="og:updated_time" content="2017-10-08T13:56:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 字节码 .class 文件解析：写一个 javap 工具">
+<meta name="twitter:description" content="我们的题目最近闲着没事想要了解一下 Java .class 文件的结构。然后想要对它进行一下解析。毕竟解析二进制码不是一件特别麻烦的事情，以前也干过，其实是非常有意思的。因此打算按照 JVM 规范对 .class 进行解析。总共用 C++ 写了不到 3k 行代码，应该能够按照 JVM 规范所说的进行完美的解析了。其实一点也不难，按照 JVM 规范的 $4 第四章给定的数据结构和规范进行直接对字节码">
+<meta name="twitter:image" content="https://wind2412.files.wordpress.com/2017/10/img_0966.jpg?w=816&h=1088&zoom=2">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/08/Java-字节码-class-文件解析：写一个-javap-工具/"/>
+
+
+
+
+
+  <title>Java 字节码 .class 文件解析：写一个 javap 工具 | wind2412的部落格✨～</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97977742-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?733fc494d1c5b28a5bef03609254381d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">wind2412的部落格✨～</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/08/Java-字节码-class-文件解析：写一个-javap-工具/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wind2412">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blue_sky.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wind2412的部落格✨～">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java 字节码 .class 文件解析：写一个 javap 工具
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-08T21:51:18+08:00">
+                2017-10-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="我们的题目"><a href="#我们的题目" class="headerlink" title="我们的题目"></a>我们的题目</h1><p>最近闲着没事想要了解一下 Java .class 文件的结构。然后想要对它进行一下解析。毕竟解析二进制码不是一件特别麻烦的事情，以前也干过，其实是非常有意思的。因此打算按照 JVM 规范对 .class 进行解析。总共用 C++ 写了不到 3k 行代码，应该能够按照 JVM 规范所说的进行完美的解析了。其实一点也不难，按照 JVM 规范的 $4 第四章给定的数据结构和规范进行直接对字节码进行解析即可。<br>下面说一下详细的方法和实践步骤。<br>对 .class 文件的解析是非常轻松加愉快的，如果想要看代码的话，请移步 <a href="https://github.com/wind2412/javap/blob/master/class_parser.h" target="_blank" rel="external">wind2412的github – 对 .class 文件进行解析</a> 我的代码仓库进行查看完整的代码。其实头文件就是 JVM 规范的所有数据结构的集合，<code>#define</code> 的是各种类型的变量结构。当然，为了解析愉快，我在每个数据结构的内部全都塞进去了一个的 <code>friend std::ifstream &amp; operator &gt;&gt; (std::ifstream &amp; f, TYPE &amp; i);</code> 结构进行结构式的从 .class 文件通过输入流进行读取字节码来填充进数据结构的内部。那我就让我们进入愉(wu)快(liao)的 .class 文件解析之旅吧～<br>本文的定位并不在于一步一步指导要怎么 parse .class file。而是要把踩过的坑都列出来。毕竟网上的菊苣们 hack 这个的也有不少，网上这方面文章还是有很多的，我没有必要重复造轮子（大雾。因此，本篇的主旨在于对想要进行这项工作的童鞋进行一个宏观的 “坑的解说（逃”。</p>
+<h2 id="需要之物"><a href="#需要之物" class="headerlink" title="需要之物"></a>需要之物</h2><ol>
+<li>JVM 的规范，最好要 SE 8 版本的规范，因为 SE 7 中有的部分和 8 不一样，改动其实也不太小（。当然为了效率我看的是中文版的，中文版的有不少错误QAQ。最后还是看的英文进行的解析。而且毕竟英文版的放在 oracle 官网上，因此数据结构可以直接进行复制粘贴（雾。</li>
+<li>C++ 基本语法的熟悉即可。当然用 Java 也不是不可以，但是据说有 Java 有内置的一个什么 xxxClassParser 在 sun 包下，可以直接经过人家的 API 进行解析的（逃。Java 毕竟全是引用，在 parse <code>annotation</code> 那里要好办很多QAQ，用 C++ 必须强行使用指针咯。</li>
+<li>java 环境。你必须要有 <code>javap</code> 和 <code>hexdump</code> 两样神器：一个是直接把 .class 文件反汇编，尤其是 <code>javap -verbose</code> 命令，你几乎可以查看到非常完整的反汇编代码，解释得非常清楚；另一个是直接暴力查看 .class 文件的字节码，两者强强联合，使用更佳！！而我的代码的定位，就是写一个 <code>javap -verbose</code> 工具。力争输出和 <code>javap -verbose</code> 一样～</li>
+</ol>
+<h2 id="BEGIN"><a href="#BEGIN" class="headerlink" title="BEGIN!"></a>BEGIN!</h2><p>那么我们就开始吧！</p>
+<ol>
+<li>预读。首先我们要知道，写 parser 的话，如果想要避免回溯，就一定要采取预读 <code>peek</code> 的策略。Java 官方在 .class 文件的制作上，也是采取了 <code>peek</code> 的策略。比如 LL(1) 文法，就是采取预读 1 个 <code>token</code> 的方法。而 LR(0) 文法就是预读 0 个 <code>token</code>。不过字节码毕竟是 <code>bytecode</code>，那么这个 <code>token</code> 当然就是一个 <code>byte</code> 啦！当然随着往下写我们就知道，因为一个 byte 最多也就能表示 256 个数字，因此可能太小了。要表示类别的数量，很有可能需要两个 bytes。所以我在里边写了 <code>peek1()</code> 和 <code>peek2()</code> 两个方法来进行预读工作。有了 C++ 的流，我们可以非常轻易地进行从流缓冲的读取。还是非常赚的～</li>
+<li>注意你机器是大端序还是小端序。我的 mac 是小端序的。因此读入的时候，<strong>保存在变量中</strong>是反向存放的。所以，这样就会引发 “读的是反的” 的情况。因此，在 *nix 环境下，我们可以引用 POSIX 规范的 <code>#include &lt;arpa/inet.h&gt;</code> 头文件，使用其中的 <code>htons()</code> 和 <code>htonl()</code> 函数进行比特的逆转。当然，这两个函数其实真正是用在网络编程当中的。在 <code>read2()</code> 和 <code>read4()</code> 中，我用到了这两个函数。</li>
+<li>关于 unicode。因为 Java 字节码全都是使用 Java 改进的 UTF8 编码进行存放的。如果我们要保存的话，就一定要将其转为 Unicode。Java 的 String 本身就支持 Unicode，自然不必多说，但是 C++ 的 std::string 不行啊……因为它某种意义上讲根本就不是一个 string……顶多算是一个 char[] 数组。但是我们有 std::wstring，它是按照 Unicode 进行存放的。其实 Java 毕竟是 Unicode，我们可以使用中文编程的，比如 <code>class 蛤蛤 { public static int 膜 = 4; }</code>，这类的情况也需要我们进行考虑。当然，用通用的 Unicode 准没错就是了～</li>
+</ol>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>JVM 规范的第四章把数据结构全用伪代码列给我们了。当然，这其中有很多坑。我会一一列举出来。</p>
+<ol>
+<li>在 Java 的规范中，有非常多的继承关系。而如何对这些继承的结构进行识别，我们就需要用到 <code>peek</code> 来进行 <code>distribute</code>。也就是，使用 “前看一个或者两个字符” 来进行选择到底该选择哪个类进行使用。举个例子，比如常量池 <code>constant_pool</code>，我们就可以看代码：<a href="https://github.com/wind2412/javap/blob/master/class_parser.h#L79-L160" target="_blank" rel="external">constant_pool 的继承关系</a>，这个 <code>cp_info 结构体</code> 就是一个基类。预先读入 <code>peek</code> 一个一字节的 <code>tag</code> 之后，我们就会按照 <code>tag</code> 的大小，按照这几个 <code>#define</code> 的变量，见 <a href="https://github.com/wind2412/javap/blob/master/class_parser.h#L34-L47" target="_blank" rel="external">constant_pool 的 tags</a>，来进行选择子类的类别，并且按照子类内部的成员向内进行填充 bytecode。这之中比较坑的是 <code>long</code> 和 <code>double</code>，因为他们在常量池当中要占据两个位置……而正常的变量都占据一个位置……我还没有实现过简单的 JVM，并不知道这么做的深意……而且常量池的索引是从 1 开始的，而不是从 0 开始，我也并不明白这个的深意……不敢妄测不敢妄测。不过这个是比较坑的部分，必须小心谨慎，否则可能会一调试调试一个晚上（QAQ。</li>
+<li>如果遇到类内部的数组(而且不定长度，是按照类内部的另一个成员变量的数值来当做长度的)，这样，编译过程中长度不确定的数组是不被允许的。必须要等到运行时才能进行。因此，必须要使用 <code>new</code> 来在堆上在运行时分配。其实这里是比较好考虑到的。但是，由于 C++ 的 RAII 特性，我们就要在这样的类中写析构函数…… 这样不断的申请释放不断 copy 代码实在是累死了QAQ……</li>
+<li>常量池 parse 完了之后，我们可以说是完成了 1/4 的工作吧。不过如果常量池 parse 完了，后边的工作难度就大大降低了。我们就可以 parse field and methods and interfaces。这三者其实都差不多，只不过 method 是最难的。因为内部含有大量的运行时字节码。这样的字节码将会是非常麻烦的，因为 <code>java -verbose</code> 的输出非常麻烦……其实截止到现在，我还并没有写完，因为实在是想要和它官方的 output 一模一样的话，实在是工作量奇大，说不定要到 4k 行去……而且要非常明确各个字节码的意义才行。等以后写一个 simple jvm 的时候再说吧。那么，比较坑的地方其实并不在于别的，而是在于 <code>annotation(注解)</code> 的解析。因为如果你仔细观察过 <code>annotation</code> 的<a href="https://github.com/wind2412/javap/blob/master/class_parser.h#L467-L505" target="_blank" rel="external">数据结构实现</a>，我们就会发现……其实 <code>element_value</code> 结构体的内部有一个 <code>value_t*</code> 的指针，当然这个 <code>value_t</code> 是继承体系中的根类。它可以变成 <code>annotation</code> 子类。而 <code>annotation</code> 结构体的内部又有着 <code>element_value</code> 的对象……你没看错这个其实是循环的。要读入必须要递归。读者看到这里，可能会以为，“没啥打不了的反正就是递归啊～”，会有这种想法不奇怪……毕竟我说得比较简单（逃，其实 java 中还有<a href="https://github.com/wind2412/javap/blob/master/Annotations.java#L22" target="_blank" rel="external">这种用法</a>，即像这种一样，我还是列在下边吧： <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"> <span class="meta">@IA</span></div><div class="line"><span class="meta">@IB</span>(name = <span class="string">"ha"</span>)</div><div class="line"><span class="meta">@IC</span>(name = <span class="string">"ok"</span>, a = <span class="meta">@IA</span>, b = &#123; <span class="meta">@IB</span>(name = <span class="string">"a"</span>), <span class="meta">@IB</span>(name = <span class="string">"b"</span>), <span class="meta">@IB</span>()&#125;)</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">haha</span> <span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>Java 的 <code>annotation</code> 赋值 <code>annotation</code> 的猥琐用法……. oh 如果有的童鞋说 “我已经知道了”，那么请忽略我说的话 QAQ，我也是在写程序的过程中才发现这个奇技淫巧的用法的……QAQ，尤其是这货在 <code>javap -verbose</code> 下所产生的反汇编字符串是：<br>    <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">RuntimeInvisibleAnnotations:</div><div class="line">	0: #10()          // IA，就是 #10 (是常量池编号) 的构造函数式空构造函数。</div><div class="line">	1: #11(#12=s#13)  // IB，就是 #11 的构造函数是 #12，也就是 name，它的构造函数的参数是 #13 &quot;ha&quot;，当然，&quot;s&quot; 代表的语义是 #13 是一个 Unicode 的 String。如下文一般的 &quot;@&quot; 表示参数是一个 annotation(递归的)。这些都可以在文档中查到。</div><div class="line">	2: #14(#12=s#15,#16=@#10(),#17=[@#11(#12=s#16),@#11(#12=s#17),@#11()])</div></pre></td></tr></table></figure></p>
+<p>对照着上边的源代码看，我们可以知道：<code>IA, IB, IC</code> 这三个 <code>RuntimeInvisibleAnnotations</code> 其实在反汇编码中代表着 <code>#10, #11 和 #14</code>。而后边跟随着的括号即是构造函数。注释我已经写在了后边，当然，最后一个我故意没有写，还请看官自行考虑～ 这部分的代码在<a href="https://github.com/wind2412/javap/blob/master/class_parser.cpp#L1788-L1848" target="_blank" rel="external">这里</a>，可以看到用了一个函数内部套着一个内部的 lambda 表达式。lambda 表达式内部有多个分支，其中如果是把 annotation 赋给 annotation 递归的情况，就会由内部的 inner lambda 呼叫外部的函数；如果要是最后一种情况，即是把数组赋给 annotation 的话，由于 .class 文件的数据结构内部表示问题，我们会让 inner lambda 递归呼叫自身。这个问题就留给读者吧～</p>
+<h2 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h2><p>搞定了上边这些，估计也到了尾声了。放一张图来表示内心的鸡冻（逃：<br>    <img src="https://wind2412.files.wordpress.com/2017/10/img_0966.jpg?w=816&amp;h=1088&amp;zoom=2" alt="IMG_0966.JPG"><br>那么这篇文章也要结束了～接下来两个月，我打算写一个 simple STL，然后仔细研读虚拟机规范，实现一个简单的 JVM。就这样吧。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/26/Effective-STL-笔记/" rel="prev" title="Effective STL 笔记">
+                Effective STL 笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="uyan_frame"></div>
+    
+  </div>
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/blue_sky.jpg"
+               alt="wind2412" />
+          <p class="site-author-name" itemprop="name">wind2412</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/wind2412" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接o(*////▽////*)q
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.google.com/" title="Google~" target="_blank">Google~</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#我们的题目"><span class="nav-number">1.</span> <span class="nav-text">我们的题目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#需要之物"><span class="nav-number">1.1.</span> <span class="nav-text">需要之物</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BEGIN"><span class="nav-number">1.2.</span> <span class="nav-text">BEGIN!</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据结构"><span class="nav-number">1.3.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#尾声"><span class="nav-number">1.4.</span> <span class="nav-text">尾声</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wind2412</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    
+
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2131821"></script>
+      <!-- UY END -->
+    
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
