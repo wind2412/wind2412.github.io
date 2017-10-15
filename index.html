@@ -363,7 +363,7 @@
       
         
           
-            <p>用 Quiver 写完之后，导出为 Markdown 然后放在一个文件夹下，然后用 MWeb 进行导入，但是导入后的图片格式会有 Quiver 自动生成的<strong>xxx = 380x300</strong>这种图片格式，需要用正则替换：<strong>\s=[0-9]+x[0-9]+</strong> 替换成全空字符即可，这样图片格式就只剩下原先的<strong>xxx</strong>了，而后边由 Quiver 自动生成的图片尺寸格式就会被正则删除了。然后，用 MWeb 直接发布到 wordpress 上，由于 MWeb 会直接转成 wordpress 的图片地址，所以直接就可以发布上去；但是，如果仅仅正常发布的话，我们就只能看到最后的结果，但是却并不能得到 Markdown 的格式。所以最后我们需要勾选：<strong>发布为 Markdown 格式</strong> 这个选项！然后发布到 wordpress 上，之后直接复制粘贴所有的，然后本地 hexo new 之后复制粘贴即可……关键问题是我特别喜欢用 Quiver 写，但是 Quiver 还没有一键发布的功能……</p>
+            <p>用 Quiver 写完之后，导出为 Markdown 然后放在一个文件夹下，然后用 MWeb 进行导入，但是导入后的图片格式会有 Quiver 自动生成的<code>xxx = 380x300</code>这种图片格式，需要用正则替换：<code>\s=[0-9]+x[0-9]+</code> 替换成全空字符即可，这样图片格式就只剩下原先的<code>xxx</code>了，而后边由 Quiver 自动生成的图片尺寸格式就会被正则删除了。然后，用 MWeb 直接发布到 wordpress 上，由于 MWeb 会直接转成 wordpress 的图片地址，所以直接就可以发布上去；但是，如果仅仅正常发布的话，我们就只能看到最后的结果，但是却并不能得到 Markdown 的格式。所以最后我们需要勾选：<strong>发布为 Markdown 格式</strong> 这个选项！然后发布到 wordpress 上，之后直接复制粘贴所有的，然后本地 hexo new 之后复制粘贴即可……关键问题是我特别喜欢用 Quiver 写，但是 Quiver 还没有一键发布的功能……所以只能采用这样间接迂回的方案了……不过这样也特别快速，不过唯一的缺点就是最后要手动清理发布的 wordpress 版本和本地由 Quiver 导出的 Markdown 了……但是其他的使用体验还是相当棒的！欢迎来尝试～其实如果你用 MWeb 这种就可以的话，那么 MWeb 一键就可以上传～不过我更喜欢 Quiver 的界面～</p>
 
           
         
