@@ -287,6 +287,142 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/21/内存笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wind2412">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blue_sky.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wind2412的部落格✨～">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/06/21/内存笔记/" itemprop="url">
+                  内存笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-21T14:41:30+08:00">
+                2017-06-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="有关于mm方面写完的心得"><a href="#有关于mm方面写完的心得" class="headerlink" title="有关于mm方面写完的心得"></a>有关于mm方面写完的心得</h1><p>最近一直没空写blog，但是现在我这小kernel终于是完工了（再不看学校的课就要挂了）。基于清华大学的ucore，其内所有的思想绝大多数是来自这里，我自己也diy了不少。一共写了5k行，虽然并不多，但是一个os kernel的infrastructure是已经完工了的。中断，分页管理，虚拟内存，交换区间，还有内核线程，用户进程以及信号量还有管程。其实是对应着ucore的lab1～lab7的。文件系统实在是没有时间了。如今已经是第17周，再不看数值分析数学就要挂了（唉）人生艰辛哪。我个人的话，毕竟才刚刚大二年级，水平有很多不足。写这个小kernel的时候，也是边看边学边写的。但是对于蒟蒻来讲，这种方法既傻瓜化，又能学到东西，所以还是非常适合我的。本系列的文章仅仅针对于同样写过kernel（菊苣们看看就好）的同好还有自己（其实只有自己哈哈），并不适合作为教程。踩过的许多坑全放在代码里边了，想要看的童鞋可以去翻一翻。当然，不要嘲笑我辣鸡的代码水平就好（笑）。</p>
+<p>当时写完了内存之后，有很多心得，如今在最后，想要在这里笔录一下，做个留念。（毕竟以后不打算走这个方向TAT）写这个小kernel的原本的目的就是学习下kernel，不要一知半解地学习，这样实在是没什么意义的。从作为一个学生的角度来看，同是学生在同一屋檐下，对于所学的东西他们全都一知半解，而只有我自己明明白白的这种优越感实在是让人欲罢不能（哈哈）。不扯犊子了。进入正题好了。</p>
+<ol>
+<li><p>在这个module中，让我耗费无数青春年华的是狗日的页目录表项（<code>pde</code>）和页目录项（<code>pte</code>）的设置。简直神特么气人的是一开始上来搞明白了怎么映射就开始写，然而并不知道无论是pte还是pde的表项内部必须放置<code>pa</code>（物理地址）而不是<code>va</code>（虚拟地址）。因为如果你TM在里边放置<code>va</code>，那么本来CPU就要查你给定的一个<code>va</code>所对应的<code>pa</code>，然后你<code>pde</code>、<code>pte</code>那里边还放置<code>va</code>虚拟地址，那CPU是根本找不到的TAT。必须在<code>pde</code>和<code>pte</code>里边全放置<code>pa</code>才行！！有整整半周就卡在这狗日的地方，眼睁睁看着qemu给我狂报0x14中断但是就是不知道为啥，简直绝望啊那几天。</p>
+</li>
+<li><p>虚拟内存蛮有意思。ucore通过<code>IDE端口</code>读外部磁盘<code>swap.img</code>，这个外部磁盘通过<code>dd</code>指令建立就可以了，好玩的很。还有paging这个比较烦人的问题，ucore的方式处理的很有意思，如果一个页被swap out到了<code>swap.img</code>中，那么就把<code>swap.img</code>的扇区编号放到<code>pte</code>中，当然，这时这个pte肯定就不合法了。因为它根本不对应一个page了。然后如果检测到这个不合法的pte，我们就执行解析扇区号，调用<code>swap_in()</code>来读取扇区，并且把page拿进来。of course，以上所有全是基于<code>0x14</code>缺页异常的。这个0x14异常简直是帮了大忙了。</p>
+</li>
+<li><p>自己实现一个<code>alloc_page()</code>，并且基于此实现一个自己的<code>malloc()</code>也是非常有趣的一环～自己实现的malloc啊！想想都鸡冻～只不过我的算法非常简单，这里是借用了hurley_os kernel的<code>FIFO malloc</code>实现的思想，然后重写了一个。哈哈，还记的那个在信息楼A311的晚上～实在是爽得不行。然而A311一到大夏天，我那最角落的位置竟然就全是飞虫，简直无法安心工作TAT（逃 我不会说这第3条明明应该和第2条换一下的</p>
+</li>
+<li><p>上边说的都貌似是相当简单的内容啊。但是实际上写起来是比较艰难的，尤其对于我这种水平般般的大二学生。不过人是在成长的嘛。艰辛的地方我全都用注释写到代码里边了。欢迎朋友们来star～只不过我的blog也其实就是写着玩玩给自己看的呐（就当是个小笔记好了～</p>
+</li>
+<li><p>说说gdb调试的问题。gdb调试当中，会遇到各种内存字节码。虽然调试一遍非常费时，但是调试出来bug的位置并加以改正之后，那心情是好的不行的～其中用的最多就是x（examine命令）。查看字节码简直是利器，x/16xw，x/32xw啥的，查起来简直酸爽。尤其是如果发现某个位置显示查不到内存了，而且这个位置在你感觉中还是合法的，那就说明：肯定TMD是页表分错了！唉（全是泪</p>
+</li>
+</ol>
+<p>多了不写了。其实要说还有好多好多好多。很遗憾没有在当时写完mm就写blog，而是到了现在才写，有些东西的印象也不是那么深刻了。最后附两张张图吧～～分别是页表和gdb调试内存，证明下内核的有趣！</p>
+<p><img src="https://wind2412.files.wordpress.com/2017/06/img_9572.jpg?w=1232" alt="IMG_3137.JPG"></p>
+<p><img src="https://wind2412.files.wordpress.com/2017/06/img_3137.jpg?w=1232" alt="IMG_9572.JPG"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/16/中断笔记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -706,7 +842,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
