@@ -92,7 +92,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="VSCode," />
+  <meta name="keywords" content="JVM," />
 
 
 
@@ -108,17 +108,17 @@
 
 
 
-<meta name="description" content="问题碰到了一个 VSCode include 路径的问题。我的项目路径在 {workspaceRoot}/include 下，一开始想要以 -I./include 的方式来编译的。不过在 VSCode 中遇到了些麻烦。 解决使用的是 Microsoft C/C++ Extension。这个插件非常棒，但是在 mac 上因为 bug 的原因之前经常烫烫烫。好在已经 fix 了。在项目路径下的 .vs">
-<meta name="keywords" content="VSCode">
+<meta name="description" content="RT。错误是：12&amp;lt;YourOpenJDK&amp;gt;/build/macosx-x86_64-normal-server-slowdebug/hotspot/bsd_amd64_compiler2/debug   ./hotspotError: Cannot find the java launcher &amp;quot;/java/re/j2se/1.8.0/promoted/latest/b">
+<meta name="keywords" content="JVM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="VSCode cpp 检索 include 路径的问题">
-<meta property="og:url" content="http://yoursite.com/2017/10/26/VSCode-cpp-检索-include-路径的问题/index.html">
+<meta property="og:title" content="在我的机器上 ./hotspot 会出现错误">
+<meta property="og:url" content="http://yoursite.com/2017/10/27/在我的机器上-hotspot-会出现错误/index.html">
 <meta property="og:site_name" content="wind2412的部落格✨～">
-<meta property="og:description" content="问题碰到了一个 VSCode include 路径的问题。我的项目路径在 {workspaceRoot}/include 下，一开始想要以 -I./include 的方式来编译的。不过在 VSCode 中遇到了些麻烦。 解决使用的是 Microsoft C/C++ Extension。这个插件非常棒，但是在 mac 上因为 bug 的原因之前经常烫烫烫。好在已经 fix 了。在项目路径下的 .vs">
-<meta property="og:updated_time" content="2017-10-26T04:09:15.000Z">
+<meta property="og:description" content="RT。错误是：12&amp;lt;YourOpenJDK&amp;gt;/build/macosx-x86_64-normal-server-slowdebug/hotspot/bsd_amd64_compiler2/debug   ./hotspotError: Cannot find the java launcher &amp;quot;/java/re/j2se/1.8.0/promoted/latest/b">
+<meta property="og:updated_time" content="2017-11-01T05:27:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="VSCode cpp 检索 include 路径的问题">
-<meta name="twitter:description" content="问题碰到了一个 VSCode include 路径的问题。我的项目路径在 {workspaceRoot}/include 下，一开始想要以 -I./include 的方式来编译的。不过在 VSCode 中遇到了些麻烦。 解决使用的是 Microsoft C/C++ Extension。这个插件非常棒，但是在 mac 上因为 bug 的原因之前经常烫烫烫。好在已经 fix 了。在项目路径下的 .vs">
+<meta name="twitter:title" content="在我的机器上 ./hotspot 会出现错误">
+<meta name="twitter:description" content="RT。错误是：12&amp;lt;YourOpenJDK&amp;gt;/build/macosx-x86_64-normal-server-slowdebug/hotspot/bsd_amd64_compiler2/debug   ./hotspotError: Cannot find the java launcher &amp;quot;/java/re/j2se/1.8.0/promoted/latest/b">
 
 
 
@@ -146,13 +146,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/10/26/VSCode-cpp-检索-include-路径的问题/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/27/在我的机器上-hotspot-会出现错误/"/>
 
 
 
 
 
-  <title>VSCode cpp 检索 include 路径的问题 | wind2412的部落格✨～</title>
+  <title>在我的机器上 ./hotspot 会出现错误 | wind2412的部落格✨～</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -290,7 +290,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/26/VSCode-cpp-检索-include-路径的问题/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/27/在我的机器上-hotspot-会出现错误/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="wind2412">
@@ -311,7 +311,7 @@
             
             
               
-                VSCode cpp 检索 include 路径的问题
+                在我的机器上 ./hotspot 会出现错误
               
             
           </h1>
@@ -326,8 +326,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-26T11:28:48+08:00">
-                2017-10-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-27T13:27:14+08:00">
+                2017-10-27
               </time>
             
 
@@ -361,14 +361,8 @@
       
 
       
-        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>碰到了一个 VSCode include 路径的问题。我的项目路径在 {workspaceRoot}/include 下，一开始想要以 <code>-I./include</code> 的方式来编译的。不过在 VSCode 中遇到了些麻烦。</p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>使用的是 Microsoft C/C++ Extension。这个插件非常棒，但是在 mac 上因为 bug 的原因之前经常烫烫烫。好在已经 fix 了。在项目路径下的 .vscode 的文件夹下一般而言有四大金刚：<code>c_cpp_properties.json</code>，<code>launch.json</code>,<code>settings.json</code> 以及 <code>tasks.json</code>。其中 $1 用于配置 path……我都没怎么碰过这东西……还以为没啥用呢（。一般配置的都是 $2 和 $4。$3 是自动生成的用户配置，不用管就好。$2 <code>launch.json</code> 用于调试，而 <code>tasks.json</code> 用于 build &amp;&amp; run。</p>
-<p>查了半天，在 VSCode 的官方博客上找到了：应该在 $1 <code>c_cpp_properties.json</code> 中配置路径。所以变成了现在这样：<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">"configurations": [</div><div class="line">        &#123;</div><div class="line">            "name": "Mac",</div><div class="line">            "includePath": [</div><div class="line">                "/usr/include",</div><div class="line">                "/usr/local/include",</div><div class="line">                "/usr/include/c++/4.2.1",</div><div class="line">                "/usr/include/c++/4.2.1/tr1",</div><div class="line">                "$&#123;workspaceRoot&#125;/include"</div><div class="line">            ],</div><div class="line">            "browse": &#123;</div><div class="line">                "limitSymbolsToIncludedHeaders": true,</div><div class="line">                "databaseFilename": "",</div><div class="line">                "path": [</div><div class="line">                    "/usr/include",</div><div class="line">                    "/usr/local/include",</div><div class="line">                    "$&#123;workspaceRoot&#125;/include"</div><div class="line">                ]</div><div class="line">            &#125;,</div><div class="line">            ......</div></pre></td></tr></table></figure></p>
-<p>emmmm。虽然我不知道 browse 那是什么东西。不过还是加上吧。<br>然而鬼畜的来了：特么竟然还是报错！！按官博说的，应该已经好了！！<br>痛苦地找了一个晚上。。。。。。<br>现在已经是第二天中午了QAQ。<br>正当我打开 issue，想要像 vscode-cpptools 官方 repository 上报 issue 的时候，看到了官方的提示：<strong>上报 issue 之前，请关闭其他插件。看看是否是其他插件的影响。</strong></p>
-<p>上报 issue 之前，请关闭其他插件。看看是否是其他插件的影响。<br>上报 issue 之前，请关闭其他插件。看看是否是其他插件的影响。<br>上报 issue 之前，请关闭其他插件。看看是否是其他插件的影响。</p>
-<p>卧槽，其实这个时候我都没怎么在意……因为另一个插件是我非常喜欢的 clang 的插件啊！虽然不是 clang 官方的（，叫 C/C++ Clang Command Adapter。是五星的插件啊！而且是个霓虹开发者开发的！OWO<br>然后我关了它。<br>竟然好了！！可以索引了！！<br>于是我看了下介绍……<br>这插件里边写的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Variables</div><div class="line"></div><div class="line">Configurations support some variables which are available in tasks.json. They can be used inside of strings (e.g. &quot;-I$&#123;workspaceRoot&#125;/include&quot;)</div><div class="line"></div><div class="line">  $&#123;workspaceRoot&#125;</div><div class="line">  $&#123;cwd&#125;</div><div class="line">  $&#123;env.ENVIRONMENT_VARIABLE&#125;</div></pre></td></tr></table></figure></p>
-<p>于是我跑到 <code>settings.json</code>，加了一行这个：<br><code>&quot;clang.cxxflags&quot;: [&quot;-std=c++11&quot;, &quot;-I${workspaceRoot}/include&quot;]</code><br>然后就好了……QAQ<br>然而这就比较诡异了……在点击头文件跳转的时候，关了微软官方的插件就不能跳转；关了 clang 插件，还是能够跳转。说明 clang 插件不对跳转有任何的作用；但是，只要没有配置 args，头文件就会出现红线报错，这时微软的插件检测到错误，也不会帮你跳转……卧槽。这是插件冲突的玄学吗……</p>
-<p>emmmm。下次一定要注意，别因为印象好就单独开小灶……因为真正的错误往往藏在你放心的位置，然后耽误你大量的时间……QAQ。</p>
+        <p>RT。错误是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;YourOpenJDK&gt;/build/macosx-x86_64-normal-server-slowdebug/hotspot/bsd_amd64_compiler2/debug   ./hotspot</div><div class="line">Error: Cannot find the java launcher &quot;/java/re/j2se/1.8.0/promoted/latest/binaries/bsd-amd64/bin/java&quot;</div></pre></td></tr></table></figure></p>
+<p>通过查找 Makefile 中 hotspot.script 文件中此错误位置发现需要引用环境变量 <code>ALT_JAVA_HOME</code>。因而只要 <code>export ALT_JAVA_HOME=&lt;YourOpenJDK&gt;/build/macosx-x86_64-normal-server-slowdebug/images/j2sdk-bundle/jdk1.8.0.jdk/Contents/Home</code> 即可。</p>
 
       
     </div>
@@ -398,7 +392,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/VSCode/" rel="tag"># VSCode</a>
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
           
         </div>
       
@@ -411,18 +405,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/10/27/在我的机器上-hotspot-会出现错误/" rel="next" title="在我的机器上 ./hotspot 会出现错误">
-                <i class="fa fa-chevron-left"></i> 在我的机器上 ./hotspot 会出现错误
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/10/25/Native-方法的探究有了小进展～～/" rel="prev" title="Native 方法的探究有了小进展～～">
-                Native 方法的探究有了小进展～～ <i class="fa fa-chevron-right"></i>
+              <a href="/2017/10/26/VSCode-cpp-检索-include-路径的问题/" rel="prev" title="VSCode cpp 检索 include 路径的问题">
+                VSCode cpp 检索 include 路径的问题 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -474,17 +464,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/blue_sky.jpg"
@@ -562,22 +543,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决"><span class="nav-number">2.</span> <span class="nav-text">解决</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       

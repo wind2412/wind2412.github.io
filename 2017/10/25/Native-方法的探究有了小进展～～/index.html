@@ -1,0 +1,776 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JVM," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="卧槽。痛苦的一天。因为需要读取 jar 文件，还用 C++ 语言QAQAQAQ，没有现成的库……我又不可能直接去解析……QAQ，于是就想到直接调用 Hotspot 写好的现成的 jar 文件库（我好聪明，逃。然后就开始了日狗的一天。啥都没干，就一直在干动态库（。mac 的动态库 dylib 实在是气死了。但是这个设计也真是让人眼前一亮啊。学到了不少东西。 一开始只想要调用 Java 的 Nativ">
+<meta name="keywords" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Native 方法的探究有了小进展～～">
+<meta property="og:url" content="http://yoursite.com/2017/10/25/Native-方法的探究有了小进展～～/index.html">
+<meta property="og:site_name" content="wind2412的部落格✨～">
+<meta property="og:description" content="卧槽。痛苦的一天。因为需要读取 jar 文件，还用 C++ 语言QAQAQAQ，没有现成的库……我又不可能直接去解析……QAQ，于是就想到直接调用 Hotspot 写好的现成的 jar 文件库（我好聪明，逃。然后就开始了日狗的一天。啥都没干，就一直在干动态库（。mac 的动态库 dylib 实在是气死了。但是这个设计也真是让人眼前一亮啊。学到了不少东西。 一开始只想要调用 Java 的 Nativ">
+<meta property="og:updated_time" content="2017-11-01T05:29:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Native 方法的探究有了小进展～～">
+<meta name="twitter:description" content="卧槽。痛苦的一天。因为需要读取 jar 文件，还用 C++ 语言QAQAQAQ，没有现成的库……我又不可能直接去解析……QAQ，于是就想到直接调用 Hotspot 写好的现成的 jar 文件库（我好聪明，逃。然后就开始了日狗的一天。啥都没干，就一直在干动态库（。mac 的动态库 dylib 实在是气死了。但是这个设计也真是让人眼前一亮啊。学到了不少东西。 一开始只想要调用 Java 的 Nativ">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/25/Native-方法的探究有了小进展～～/"/>
+
+
+
+
+
+  <title>Native 方法的探究有了小进展～～ | wind2412的部落格✨～</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97977742-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?733fc494d1c5b28a5bef03609254381d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">wind2412的部落格✨～</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/Native-方法的探究有了小进展～～/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wind2412">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blue_sky.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wind2412的部落格✨～">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Native 方法的探究有了小进展～～
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T13:28:26+08:00">
+                2017-10-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="卧槽。痛苦的一天。"><a href="#卧槽。痛苦的一天。" class="headerlink" title="卧槽。痛苦的一天。"></a>卧槽。痛苦的一天。</h1><p>因为需要读取 jar 文件，还用 C++ 语言QAQAQAQ，没有现成的库……我又不可能直接去解析……QAQ，于是就想到直接调用 Hotspot 写好的现成的 jar 文件库（我好聪明，逃。<br>然后就开始了日狗的一天。啥都没干，就一直在干动态库（。mac 的动态库 dylib 实在是气死了。但是这个设计也真是让人眼前一亮啊。学到了不少东西。</p>
+<h1 id="一开始只想要调用-Java-的-Native-方法"><a href="#一开始只想要调用-Java-的-Native-方法" class="headerlink" title="一开始只想要调用 Java 的 Native 方法"></a>一开始只想要调用 Java 的 Native 方法</h1><p>想写一个小型 jvm 的话，（虽然是玩具，不过我是不可能仅仅局限于只是跑一个 hello world 这种的。自然，想要打造一个运行时环境，那么就<strong>必须能够和原生java挂钩</strong>。这是目标，同样也是底线。不能让步，如果写完了之后连 java 的类库都不能调，可以狗带了。比如说日后我要是想要实现一个 C 语言的玩具编译器的话，那么不可能仅仅调用我自己底层写的 printf，一定要调用 stdio.h 中的 printf 才好啊。但是这样的话，就肯定涉及解释执行 C 宏了。因为 stdio.h 全都是宏，大家也不是不知道。当然……就我这辣鸡水平估计是要弃坑了……不过这是一年以后的话题了。我们先放着。和这一样，如果要写一个小型 jvm，那么就必须要支持 java 类库的调用才行。要不然就只能跑自己 XJB 写的不带任何库的 java 文件，一点意义也没有。因而，必须要调用 Native 方法。但是，这时就产生了一个问题啊。这个 Native 方法，每个 Native 是不是都是纯函数呢？这是个很重要的话题呢。如果不纯，我即使强行从动态库中把他们扒出来，调用也一定会出错。因为可能这个 Native 方法还涉及到<strong>他周边的上下文环境</strong>，而我只调用了这个方法，那么肯定会出错的。这个 blog 就是一个栗子。。因为要拆包 jar 文件，我模仿 hotspot 的调用方式调用了一波 jre lib，于是代码如下：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">   <span class="built_in">string</span> path = <span class="string">"&lt;YourOpenJDK&gt;/build/macosx-x86_64-normal-server-slowdebug/images/j2sdk-bundle/jdk1.8.0.jdk/Contents/Home/jre/lib/"</span>;  <span class="comment">// 自己编译的 jdk。如果是你的，应该路径(Mac OS)是 /Library/Java/JavaVirtualMachines/jdk1.8.0_111.jdk/Contents/Home/jre/lib/</span></div><div class="line"><span class="built_in">string</span> jvm_path = path + <span class="string">"server/"</span>;</div><div class="line"><span class="built_in">string</span> target = path + <span class="string">"libzip.dylib"</span>;  <span class="comment">// java 中，java.util.ZipFile 类的 native 文件最后全被打包成了 jre/lib 中的 libzip.dylib。在 linux 上可能是 libzip.so 吧。我们将要解包，并且调用里边 sun 公司开发者写好的 Zip_Open 函数，这个函数可以解开一个 zip 包并且读文件。源代码在 &lt;YourOpenJDK&gt;/jdk/src/share/native/java/util/zip/zip_util.c 中。</span></div><div class="line"><span class="comment">// [1] 占位符，这里一会要插入代码</span></div><div class="line"><span class="keyword">void</span> *handle = ::dlopen((target).c_str(), RTLD_LAZY); <span class="comment">// posix 的 &lt;dlfcn.h&gt; 头文件，这个头文件是 &lt;DynamicLibaryFunCtioN&gt; 的缩写。即动态库 utils。而 dlopen 函数则根据你给定的库路径，使用 RTLD_LAZY 宏采用 lazy load 的策略——即再用到此动态库的时候再解开。懒人策略。</span></div><div class="line"><span class="built_in">cout</span> &lt;&lt; (<span class="keyword">unsigned</span> <span class="keyword">long</span>)handle &lt;&lt; <span class="built_in">endl</span>;  <span class="comment">// 测试。如果是 0 则说明错误。</span></div><div class="line"><span class="keyword">if</span> (handle == <span class="literal">nullptr</span>) <span class="built_in">cout</span> &lt;&lt; dlerror(); <span class="comment">// 如果错误输出为啥错。</span></div><div class="line"><span class="keyword">void</span> *fun = ::dlsym(handle, <span class="string">"ZIP_Open"</span>);  <span class="comment">// dlsym 方法，在库中选择一个函数 ZIP_Open，然后传回地址。</span></div><div class="line"><span class="built_in">cout</span> &lt;&lt; (<span class="keyword">unsigned</span> <span class="keyword">long</span>)fun &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 同上，输出 0 则说明错误。</span></div></pre></td></tr></table></figure></p>
+<h1 id="emmm。然后-mac-的动态库给我报错"><a href="#emmm。然后-mac-的动态库给我报错" class="headerlink" title="emmm。然后 mac 的动态库给我报错"></a>emmm。然后 mac 的动态库给我报错</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">dyld: Library not loaded: @rpath/libjvm.dylib</div><div class="line">  Referenced from: &lt;此执行文件名&gt;</div><div class="line">  Reason: image not found</div></pre></td></tr></table></figure>
+<p>这一段非常恶心。本质上原因是：由于你这个调用的动态库引用了别的动态库，如图：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;YourOpenJdk&gt;/build/macosx-x86_64-normal-server-slowdebug/images/j2sdk-bundle/jdk1.8.0.jdk/Contents/Home/jre/lib&gt; otool -L libzip.dylib</div><div class="line">libzip.dylib:</div><div class="line">	@rpath/libzip.dylib (compatibility version 1.0.0, current version 1.0.0)</div><div class="line">	/usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.5)</div><div class="line">	@rpath/libjava.dylib (compatibility version 1.0.0, current version 1.0.0)</div><div class="line">	@rpath/libjvm.dylib (compatibility version 1.0.0, current version 1.0.0)</div><div class="line">	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 169.3.0)</div></pre></td></tr></table></figure></p>
+<p>我们能够发现这个动态库 libzip.dylib 引用了一堆动态库，有两个 libz.1.dylib 和 libSystem.B.dylib 是绝对路径，那么系统绝对不可能找不着。关键在于另三个：前边都有个 @rpath。<br>这个 @rpath 是执行的路径。貌似没法直接输出，只能通过强行指定才行。有的大神用 <code>otool -l libzip.dylib</code>(注意 l 小写) 然后得到了如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">Load command 11</div><div class="line">          cmd LC_LOAD_DYLIB</div><div class="line">      cmdsize 48</div><div class="line">         name @rpath/libjvm.dylib (offset 24)</div><div class="line">   time stamp 2 Thu Jan  1 08:00:02 1970</div><div class="line">      current version 1.0.0</div><div class="line">compatibility version 1.0.0</div><div class="line">Load command 12</div><div class="line">          cmd LC_LOAD_DYLIB</div><div class="line">      cmdsize 56</div><div class="line">         name /usr/lib/libSystem.B.dylib (offset 24)</div><div class="line">   time stamp 2 Thu Jan  1 08:00:02 1970</div><div class="line">      current version 1238.60.2</div><div class="line">compatibility version 1.0.0</div><div class="line">Load command 13</div><div class="line">          cmd LC_RPATH    // 这里！</div><div class="line">      cmdsize 32</div><div class="line">         path @loader_path/. (offset 12)</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>大概能看出来后边的 LC_RPATH 的指定位置，是 @loader_path。也就是，应该是你的可执行文件调用这个库所在的位置。比如说，我在 <code>/usr/tmp/haha</code> 这个可执行文件中调用  <code>&lt;YourOpenJdk&gt;/build/macosx-x86_64-normal-server-slowdebug/images/j2sdk-bundle/jdk1.8.0.jdk/Contents/Home/jre/lib/libzip.dylib</code>，那么八成这个 <code>@loader_path</code> 只是 <code>/usr/tmp/haha</code>。然后由于 <code>@rpath</code> 是 <code>@loader_path/.</code>，那么就一样。于是 libzip.dylib 引用的 libjvm.dylib 等共三个的目录变成了 <code>/usr/tmp/libjvm.dylib</code>……应该是这样。为啥说是应该，因为我也没有验证过，存在错误的可能。不过八成是真的（逃。但是总之你是肯定索引不到真正的 libjvm.dylib 就是了，哈哈。<br>于是我们要引入 mac 的一个工具：<code>install_name_tool</code>。这个工具可以在可执行文件/动态库中加入 @rpath。由于我们正在写程序，所以不可能通过程序把自己设置 rpath。。。所以，我们只能在程序内去修改 libzip.dylib 的 rpath 了。那么我们在刚才的 [1] 处添加几行代码：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">string</span> cmd = <span class="string">"install_name_tool -add_rpath "</span> + jvm_path + <span class="string">" "</span> + target;</div><div class="line">system(cmd.c_str());  <span class="comment">// 执行：install_name_tool -add_rpath &lt;Your Real JVM Path&gt; &lt;Need Modified Lib/Execute File&gt;</span></div></pre></td></tr></table></figure></p>
+<p>这样就可以成功了 QAQ。我说的比较容易，其实花了我将近半天才弄完QAQ。</p>
+<h1 id="调用不纯的-Native-方法是一个巨坑。"><a href="#调用不纯的-Native-方法是一个巨坑。" class="headerlink" title="调用不纯的 Native 方法是一个巨坑。"></a>调用不纯的 Native 方法是一个巨坑。</h1><p>到这一步能够解析动态库了，那么我们就开始搜刮里边的 sun 公司写好的函数了～于是加入下边的代码来 get 那个 ZIP_Open 函数～<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">char</span> *error_msg = <span class="literal">nullptr</span>;</div><div class="line"><span class="keyword">typedef</span> <span class="keyword">void</span> ** (JNICALL *ZIPOPEN) (<span class="keyword">const</span> <span class="keyword">char</span> *name, <span class="keyword">char</span> **pmsg); <span class="comment">// jdk native 函数中 ZIP_Open 的定义。</span></div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">void</span> * jzfile;  <span class="comment">// 意为 jar/zip file 的句柄</span></div><div class="line">ZIPOPEN zip_open = (ZIPOPEN)fun;    <span class="comment">// 函数指针强转。</span></div><div class="line">jzfile *zip = zip_open(<span class="string">"&lt;YourOpenJdk&gt;/build/macosx-x86_64-normal-server-slowdebug/jdk/lib/jce.jar"</span>, &amp;error_msg); <span class="comment">// 随手解压一个 jar 文件</span></div><div class="line"><span class="built_in">cout</span> &lt;&lt; (<span class="keyword">unsigned</span> <span class="keyword">long</span>)zip &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 不是 0 则没问题。</span></div></pre></td></tr></table></figure></p>
+<p>然后就开始了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line"># To suppress the following error report, specify this argument</div><div class="line"># after -XX: or in .hotspotrc:  SuppressErrorAt=/os.hpp:203</div><div class="line">......</div><div class="line">无限循环......</div></pre></td></tr></table></figure>
+<p>Oh my god。<br>试了无数遍都这样，我是崩溃的！！<br>卧槽，后来仔细想了想……这一段错误提示是不是在 jvm 中的啊？？？<br>然后我在 <youropenjdk>/hotspot/src 下 grep 了一发，发现这两句出现在 <code>hotspot/src/share/vm/utilities/debug.cpp</code> 下……<br>然而！然而！！<br>我调用的 ZIP_Open 函数分明是 jdk 中的 Native 函数啊！！jdk 和 hotspot 是两个模块互不干扰，而且我就是写了一段 cpp 代码，根本没用到 jvm 啊！！<br>emmmm。细心的小伙伴肯定发现了。刚才的 libzip.dylib 引用了 libjvm.dylib。<br>那只能说明一点！！<br>（双眼一亮）<br>ZIPOpen 函数内部肯定检测了 JVM 的启动！！<br>是的就是这样。查阅源码之后我们能看到内部的各种检测自家的 JVM 启没启动的代码……<br>所以我们必须启动一个虚拟机才行。调用 JNI：<br>在整个代码的前部加上：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">int</span> res;</div><div class="line">JavaVM *jvm;</div><div class="line">JNIEnv *env;</div><div class="line">JavaVMInitArgs vm_args;</div><div class="line">JavaVMOption options[<span class="number">3</span>];</div><div class="line"></div><div class="line"><span class="comment">// 设置初始化参数：</span></div><div class="line">options[<span class="number">0</span>].optionString = <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span> *&gt;(<span class="string">"-Djava.compiler=NONE"</span>);	<span class="comment">// ISO-C++11 不允许把 const char* 转为 char*。</span></div><div class="line"><span class="comment">// classpath 有多个的时候，Windows 用 ";" 分割。 unix 用 ":" 分割。</span></div><div class="line">options[<span class="number">1</span>].optionString = <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span> *&gt;(<span class="string">"-Djava.class.path=."</span>);</div><div class="line"><span class="comment">// 用于跟踪运行时信息</span></div><div class="line">options[<span class="number">2</span>].optionString = <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span> *&gt;(<span class="string">"-verbose:jni"</span>);</div><div class="line"><span class="comment">// 版本号不能设漏</span></div><div class="line">vm_args.version = JNI_VERSION_1_6;</div><div class="line">vm_args.nOptions = <span class="number">2</span>;		<span class="comment">// 想要 JVM 的输出调试信息的话，请改为 3。</span></div><div class="line">vm_args.options = options;</div><div class="line">vm_args.ignoreUnrecognized = JNI_TRUE;</div><div class="line"></div><div class="line"> <span class="comment">// 初始化虚拟机</span></div><div class="line">res = JNI_CreateJavaVM(&amp;jvm, (<span class="keyword">void</span> **)&amp;env, &amp;vm_args);</div><div class="line"> <span class="keyword">if</span> (res == JNI_ERR) &#123;</div><div class="line"> 	<span class="built_in">cerr</span> &lt;&lt; <span class="string">"Can't create Java VM!"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line"> 	<span class="built_in">exit</span>(<span class="number">1</span>);</div><div class="line"> &#125;</div></pre></td></tr></table></figure></youropenjdk></p>
+<p>然后就可以了！输出就是正常的了。不过我们在编译的时候也要用 install_name_tools:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;</span> clang++ -I/usr/include/jni -L/&lt;YourOpenJdk&gt;/build/macosx-x86_64-normal-server-slowdebug/images/j2sdk-bundle/jdk1.8.0.jdk/Contents/Home/jre/lib/server/ &lt;thisFile&gt;.cc -o &lt;a.out&gt; -ljvm</div><div class="line"><span class="meta">&gt;</span> install_name_tool -add_rpath  /&lt;YourOpenJdk&gt;/build/macosx-x86_64-normal-server-slowdebug/images/j2sdk-bundle/jdk1.8.0.jdk/Contents/Home/jre/lib/server &lt;a.out&gt;</div><div class="line"><span class="meta">&gt;</span> ./a.out</div><div class="line"><span class="meta">#</span> 输出即正常！</div></pre></td></tr></table></figure></p>
+<p>这说明，如果要自己写的话，Native 方法也要自己实现，不能调用人家的啊……（</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/26/VSCode-cpp-检索-include-路径的问题/" rel="next" title="VSCode cpp 检索 include 路径的问题">
+                <i class="fa fa-chevron-left"></i> VSCode cpp 检索 include 路径的问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/23/解析-dylib-文件并且找到-java-native-方法的源代码/" rel="prev" title="解析 dylib 文件并且找到 java native 方法的源代码">
+                解析 dylib 文件并且找到 java native 方法的源代码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="uyan_frame"></div>
+    
+  </div>
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/blue_sky.jpg"
+               alt="wind2412" />
+          <p class="site-author-name" itemprop="name">wind2412</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/wind2412" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接o(*////▽////*)q
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.google.com/" title="Google~" target="_blank">Google~</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#卧槽。痛苦的一天。"><span class="nav-number">1.</span> <span class="nav-text">卧槽。痛苦的一天。</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一开始只想要调用-Java-的-Native-方法"><span class="nav-number">2.</span> <span class="nav-text">一开始只想要调用 Java 的 Native 方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#emmm。然后-mac-的动态库给我报错"><span class="nav-number">3.</span> <span class="nav-text">emmm。然后 mac 的动态库给我报错</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调用不纯的-Native-方法是一个巨坑。"><span class="nav-number">4.</span> <span class="nav-text">调用不纯的 Native 方法是一个巨坑。</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wind2412</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    
+
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2131821"></script>
+      <!-- UY END -->
+    
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
