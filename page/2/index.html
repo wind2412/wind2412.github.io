@@ -287,6 +287,244 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/26/Effective-STL-笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wind2412">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blue_sky.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wind2412的部落格✨～">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/09/26/Effective-STL-笔记/" itemprop="url">
+                  Effective STL 笔记
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-26T19:56:03+08:00">
+                2017-09-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h1 id="第零章-前言"><a href="#第零章-前言" class="headerlink" title="第零章 前言"></a>第零章 前言</h1><hr>
+<p>建议：Effective STL 这本书非常有深度，在细节上尤为体现。建议读这本书之前，先仔细研读侯捷老师的《STL 源码剖析》，然后好好研究 sgi-stl 源码。对大致框架掌握仔细之后，可以阅读《Effective STL》加以查缺补漏以及更加精进。</p>
+<hr>
+<h1 id="第一章-容器"><a href="#第一章-容器" class="headerlink" title="第一章 容器"></a>第一章 容器</h1><hr>
+<ol>
+<li>[1] vector、string (其实还应该有基于 heap 的 priority_queue 和 queue)这类连续容器的插入、删除会对所插入的位置的后边的所有迭代器、指针以及引用变得无效。而且，如果插入操作导致了容器扩容，将会使整个容器的迭代器、指针和引用全部失效。因此，一定要默认“vector、string 的插入和删除一定会造成所有迭代器、指针、引用失效”，这样才不会发生错误和 UB 行为。 [2] list、map、set、multimap、multiset 等等基于节点的容器(链表、红黑树) 上的插入、删除操作从来不会使任何迭代器、指针和引用发生无效(除了你指向一个正在删除的元素)。因此可以尽情使用。 [3] deque 比较特殊，它是唯一一个 “当插入操作发生在开头/末尾的时候，迭代器会发生无效，但是指针和引用不会发生无效的 STL 标准容器”。因为它基于浅拷贝来进行内存的复制。</li>
+<li>对 vector 等的使用封装化。typedef vector<int> CCList; 这样以后 vector 可以换成 deque。必要的使用使用 template class 来进行封装细节。</int></li>
+<li>STL 容器全是复制来实现的。但是这对于继承和多态比较麻烦，因为传入 vector\<shape\> 的 Rect 对象的特有信息会被 slice(剥离)，而且无法找回。这样的话就必须【传入指针】，即使用 vector\<shape*\> 来进行操作，这样才能够一劳永逸。当然，指针的释放是头痛的问题。我们可以使用智能指针～～</shape*\></shape\></li>
+<li>调用 empty() 来代替 size() == 0，因为 empty() 只是比较 begin 和 end 迭代器，但是 size() 需要现算。size() 是 O(n) 的本质是由于 STL 牺牲了 size() 的时间复杂度，把 O(1) 的时间复杂度给了 splice()。这两个的时间复杂度必然有一个是 O(1) 一个是 O(n)。因为 splice 的参数是两个迭代器，他们之间元素的数目是不知道的。如果要更新 size，就必须遍历。如果想要保证 splice 的 O(1)，就不能去遍历，而牺牲掉 size。这种矛盾构成了 size 可能是 O(n) 实现的格局。</li>
+<li>很重要的 v.assign(iter1, iter2) 区间分配函数。意思就是把 v 变成 iter1 ～ iter2 之间的东西。</li>
+<li><code>list&lt;int&gt; l(istream_iterator&lt;int&gt;(f), istream_iterator&lt;int&gt;());</code> 这样写并不可行。应该这样写：<code>list&lt;int&gt; l((istream_iterator&lt;int&gt;(f)), istream_iterator&lt;int&gt;());</code>。这是 C++ 编译器的问题。</li>
+<li>如果 使用 vector<t*> 的话，注意 v.push_back(new T) 在 v 析构的时候，T 是不会被析构的。这样就会内存泄漏。于是，我们【一定要】vector<shared_ptr<t>&gt; ！！</shared_ptr<t></t*></li>
+<li>不要使用 vector<auto_ptr<t>&gt;。因为这个智能指针是会【转移】对象所有权，当 v.push_back(new T) 的时候没啥问题，但是当 T temp = v[3] 的时候，会造成 v[3] 的所有权被转移到了 temp，而造成 v[3] 本身 UB。</auto_ptr<t></li>
+<li><p>很重要！！选择迭代器删除的方法，还要保证迭代器不失效——可以结合 clause 1 一起看！！[1] 对于连续内存的容器 vector、string、deque(多个连续内存的容器)，可以使用 erase-remove 的手段清除。即，<code>v.erase(remove(v.begin(), v.end(), 3), v.end())</code>。[2] 对于标准关联容器 set、multiset、map、multimap 的时候，<strong>使用任何名为 remove 的方法都是错误的</strong>。因为他们内部没有 remove 方法，只有 erase 方法。且使用 std::remove 可能会覆盖容器的值甚至是破坏容器。因为 std::remove 会把被删除的值通过迭代器交换到容器后边，而这 4 个容器全基于红黑树，任何的移动都会导致树结构的崩溃。可以见第 32 条。所以应该使用 c.erase(3)。[3] 对于 list 来说，两种方式都是可行的。但是<strong>一般来说都会使用 vector 和 string 的 erase-remove 方法。不造为啥……</strong>。[4] 如果是条件删除 remove-if 的话，对 [1] 而言只要改成 erase-remove_if 即可，很简单。对于 [3] 的话却变成了使用类似关联容器的 l.remove_if() 更加简单了。不过对于 [2] 的话，就要使用一些技巧。因为虽然关联容器的迭代器几乎不会失效，但是在删除元素的时候指向该元素的迭代器是肯定会失效的。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; c;</div><div class="line"><span class="comment">// ...</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> i = c.begin(); i != c.end(); i ++) &#123;  <span class="comment">// 使用 auto i。该拷贝就要拷贝。使用 auto &amp;&amp; 因为 iterator 本身并没有 new 内存，因此效率是一样的，也是浅拷贝全部东西。</span></div><div class="line">  <span class="keyword">if</span>(...) c.erase(i);   <span class="comment">// 但是很不幸这是错的。因为 i 被删掉的时候已经失效。这时 i 有可能是未知值，也有可能指向其他地方。而且树也会发生旋转，结构发生改变。所以我们要修改如下：</span></div><div class="line">&#125;</div><div class="line"><span class="comment">// 改成：</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">auto</span> i = c.begin(); i != c.end(); ) &#123;    <span class="comment">// 需要自己写遍历循环了。因为 vector 的 erase 一次能删一堆(因为 remove 把该删的都调到最后了)，而 set 的 erase 一次只能删除迭代器指向的那个(因为 set 不能 remove)，但是其实这两者的 erase 接口都是一样的，都可以删除一个 iter 或者删除一整个 iter1～iter2 的区间。区别仅仅在于有没有 remove 来扶一下。且 vector::erase() 有返回值 iter，返回被 remove 的元素的下一个；而 set::erase() 返回 void。</span></div><div class="line">  <span class="keyword">if</span>(...) c.erase(i++); <span class="comment">// 这样的变换是非常正确的。不过乍一看好像是错的而已。容易误解成 “这不是 c.erase(i) 然后 i 再 ++ 么？不是和原先一样吗” 的感觉。不过这是错觉。其实 i 是一个 iterator class。当 i++ 的时候，其实是先调用了 operator ++ (int n)。而后内部迭代器先发生了改变，然后返回一份 copy 的发生变化前的 iterator。然后 c.erase(i)，这时树的结构会发生变化。这时我们参照 clause [1]，对于关联容器的插入和删除不会让迭代器、引用和指针发生失效。而且增加过的 i 也确实牢牢地指向下一个节点，纵使树发生了旋转。(因为树发生旋转仅仅是因为树节点的内部指针变化了，而节点自身并没有发生内存位置的移动)。对数据结构掌握深入的话，就会明白这一切。</span></div><div class="line">  <span class="keyword">else</span> i ++;    <span class="comment">// 我写得太多了......别忘了这还有一句（</span></div><div class="line">  <span class="comment">// 且，其实我们对 i++ 这个操作一直具有着误解。c.erase(i++) 并不等于 c.erase(i) 然后 i++ 啊。而是 i 的迭代器正体已经变化了，而又返回一个过去的 temp_i 而已。其实这是一共两份副本。其实原先学 C 语言的时候，理解的 int i = 0; func(i++) 以为是先 func(i) 然后 i++ 呢......虽然结果上来讲是对的，但是语义却是完全错的......因为【当时 i 就变了，只不过是返回副本而已，造成了看起来好像是 i 在做完 func(i) 之后而在下一句之前才 ++ 的假象。】</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> [5] 如果要打 log 记录被删除元素的话，由于关联容器是一个一个删，反而好打 log。而 vector、string 是批量删除，反而需要改成一个一个删除的形式才能打 log。</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 既然要一个一个删，那就只能使用删除单个迭代器的 erase 了。但是要注意 vector 删除元素会造成迭代器失效！因此，我们需要使用 vector&lt;T&gt;::erase 的返回值，该返回值是被删除元素的下一个元素的有效迭代器。</span></div><div class="line"><span class="keyword">for</span>(<span class="keyword">auto</span> i = c.begin(); i != c.end(); ) &#123;</div><div class="line">  <span class="keyword">if</span> (...) &#123;</div><div class="line">    Log &lt;&lt; .... &lt;&lt; *i &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    i = c.erase(i);   <span class="comment">// 重点！！</span></div><div class="line">  &#125; <span class="keyword">else</span> ++i;   <span class="comment">// 记住正常使用迭代器的时候，尽量用 ++i 而不是 i++。因为 i++ 要创建一个副本！！太浪费了！！</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>最重要！！这涉及到如何去编写一个 Allocator！！见第 10 条末尾！！记住提供 nested-rebind 模板，然后 allocate() 接收参数为要分配的对象个数，而不是字节总数！！和 sgi 的 simple_allocator 的外层包装(STL规范)一样！！但是底层实现随你便。而且，必须返回 T* 指针！！<a href="http://www.josuttis.com/cppcode/myalloc.hpp" target="_blank" rel="external">规范的allocator写法</a></p>
+</li>
+<li>自己编写的多个 allocator 要等价。allocate/construct/destruct/deallocate，而且不能有 non-static 成员变量，一定要实现“共享”。</li>
+<li>STL 标准规定：[1] 多个线程对同一个容器的“读”操作是安全的。但是之中不能写操作。[2] 多个线程对不同的容器做写入操作时安全的。?????????????<br>【重要：】我们可以把锁的 lock(container) 封装到一个 Lock 类的 constructor 中，然后把 unlock(container) 封装到 Lock 类的 destructor 中。这样的话，Lock 的构造函数就需要接收一个 Container，内部存放一个 private 的 Container &amp; 引用。然后这样，就不用每次都手动调用 lock 和 unlock 了。而且可以自动析构，还是异常安全的。因为即便抛出异常，只要 catch，Lock 类就会执行析构的。</li>
+</ol>
+<hr>
+<h1 id="第二章-vector-和-string"><a href="#第二章-vector-和-string" class="headerlink" title="第二章 vector 和 string"></a>第二章 vector 和 string</h1><hr>
+<ol>
+<li>string 一般使用引用计数来进行优化。而 vector 强制不能使用引用计数。但是，引用计数本身又会对多线程安全造成问题，因此还要手动进行线程安全处理，这就会让 string 在多线程的环境下的效率还不及不加引用计数的版本。想要避免的话，[1] 看 string 有没有手动关闭引用计数的接口 [2] 使用 vector<char> 来代替 string 也是可以的。</char></li>
+<li>[1] 在 <code>for(int i = 0; i &lt; 1000; i ++) v.push_back(...);</code> 的过程中，vector 会扩容高至 10 次。这样会对效率有巨大影响。在已经知道大致 size 的状况下，请先使用 <code>v.reserve(1000);</code>。这样能够极大提高效率。[2] 牢记：vector 和 string 的插入和删除总会使得迭代器失效。见第 1 条。 [3] 我们其实可以先 v.reserve() 一个超大的空间，然后在 push_back 或者 insert 一堆元素之后使用 17 条的 swap 缩容技法。这样能够避免频繁的堆分配和堆释放。</li>
+<li>这一条非常棒！！也很有难度。揭示了不同的 4 种 string 实现的优劣势，同时也深化了传入指针进行构造和传入对象进行复制构造之间的共享能力的异同。联想到了 java 如果所有对象都需要接收一个参数构造的话，所有对象都传入同一个句柄构造，那么这些对象之间全都是“共享”的。也就是如果我在外部修改这个句柄，那么所有的这些对象都会“变化”。这是不安全的。这样我们需要调用 clone 方法来进行效率较低的复制才行。这样的“共享”能力是这些 string 之间的不同，也是 C++ 和 Java 之间的部分区别。详情请见书中条款 15 才好。阅读原著才是坠吼的。</li>
+<li>在把 vector 和 string 的指针传递给一个 C API 类似于 <code>void haha(const int *begin, int size)</code> 这种的时候，需要谨慎再谨慎：[1] vector 尽量使用 <code>haha(&amp;*v.begin(), v.size())</code> 进行调用，而不是 <code>haha(v.begin(), v.size())</code>。因为前者符合语义是一个指针，而后者是一个 iterator。虽然在 vector 中确实是一样的。但是尽量写后者。[2] 如果有 <code>haha(const char *ptr)</code> 这种，需要使用 <code>haha(s.c_str())</code> 来进行调用。不过要注意：string 的最后可能没有 ‘\0’。因为 string 其实就是类似于 vector<char> 的定位，就是一个容器而已，只不过装的全是 char 字符。因此，在 <code>haha</code> 内部进行字符串遍历的时候，说不准中间会遇到 ‘\0’ 的情况。虽然 c_str() 会在返回的 const char * 后边自动加上一个 ‘\0’，但是并不保证字符串中间没有 ‘\0’。所以这里要注意一下。[3] 在 [1] 中，<code>haha</code> 有可能修改 vector 内部的值。要注意。如果我们传进来的 vector 是有序的，那么只能祈祷 <code>haha</code> 结束之后 vector 还是有序的了。[4] 在 C API 对 vector 初始化是没什么问题的。因为 vector 和 array 有着内存布局的兼容性。对 string 初始化可能要麻烦些，需要先初始化一个 vector<char>，然后再 copy 到 string 中去。 ==&gt;  扩展：可以用 C API 初始化 vector<double long=""> 啥的，再复制到 list/deque 也是可以的。但是，最好不要用 C API 初始化数组。因为我们未必知道它的大小，会比较危险。而且其实 13 条的本意是：尽量用 vector 来代替数组。</double></char></char></li>
+<li>使用 swap 技巧来对无法缩容的 vector 进行缩容。<code>vector&lt;T&gt;(target_vec).swap(target_vec)</code> 即可做到。这里假设 <code>target_vec</code> 的 capacity 远远大于 size，有可能是一开始 reserve 时计算不正确引起，也有可能是本来我有 10001 个元素，在加到 10000 个的时候 vector 扩容 2 倍变成 20000，但是接下来只有最后一个元素被 push_back。于是有 9999 个空余的空间。这样，先复制构造 <code>target_vec</code>，就可以有 size == capacity 的新的匿名 vector。然后我们再把它跟有特别多空闲空间的 <code>target_vec</code> 进行交换即可。交换完之后匿名 vector 就会被自动析构。所以我们原先 capacity == 20000 的就消失掉了。留下的是 capacity == 10001 正好的。</li>
+<li>避免使用 <code>vector&lt;bool&gt;</code>。<code>vector&lt;bool&gt;</code> 是针对 vector 特化的产物，<strong>不是标准的 STL 容器</strong>。而且，<code>vector&lt;bool&gt;</code> <strong>其实并不储存 bool</strong>。bool 一个才占用 1 byte，但是指针和引用要占用 8 bytes。指针 T<em> 和引用 T&amp; 竟然比 T 本身占得还多。而且存储 bool 本身也太消耗内存。于是 <code>vector&lt;bool&gt;</code> 被特化成了 bitset 一样的用 位域 来实现的方式。因而 `bool </em>pb = &amp;v[0]<code>是编译不过的。但是 v[0] 使用了 More Effective C++ 的代理类的方式，重载 vector&lt;bool&gt;::operator [] 返回一个嵌套 (nested) 代理类 (proxy class) 对象来模拟 vector&lt;T&gt;::operator []。但是这却是不完整的，比如我们没法做</code>bool *pb = &amp;v[0]`。不过我们可以使用 deque<bool> 或者 bitset 来进行代替就是了。<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span> </span></div><div class="line">&#123;</div><div class="line">	<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt; v;</div><div class="line">	v.push_back(<span class="literal">true</span>);</div><div class="line">	v.push_back(<span class="literal">false</span>);</div><div class="line">	v.push_back(<span class="literal">true</span>);</div><div class="line">	</div><div class="line">	<span class="built_in">cout</span> &lt;&lt; v[<span class="number">2</span>] &lt;&lt; <span class="built_in">endl</span>;		<span class="comment">// 调试进去就知道，在 llvm 下，v[2] 返回一个代理类的对象 class __bit_reference &#123;&#125;。而且它的内部重载了 operator bool() 强转符号。</span></div><div class="line">	</div><div class="line">	<span class="keyword">bool</span> b = v[<span class="number">2</span>];				<span class="comment">// 可以通过。因为重载了 operator bool()</span></div><div class="line"><span class="comment">//	bool *bb = &amp;v[2];			// 但是指针无法通过！！因为 error: no viable conversion from '__bit_iterator&lt;std::__1::vector&lt;bool, std::__1::allocator&lt;bool&gt; &gt;, false&gt;' to 'bool *'!!</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</bool></li>
+</ol>
+<hr>
+<h1 id="第三章-关联容器"><a href="#第三章-关联容器" class="headerlink" title="第三章 关联容器"></a>第三章 关联容器</h1><hr>
+<ol>
+<li>理解相等 <code>(operator == )</code> 以及等价 <code>(operator &lt; or &gt;)</code> 之间的差异。<code>std::find()</code> 函数一般都以 <code>operator ==</code> 作为筹码，但是 <code>set&lt;T&gt;::find()</code> 和 <code>set&lt;T&gt;::insert()</code> 会以 <code>operator &lt;</code> 作为筹码(因为是红黑树)。所以，对一个关联容器 set，要优先调用 <code>set.find(xxx)</code> 而不是 <code>find(set.begin(), set.end(), xxx)</code>。因为在自己配置既定比较规则 <code>Comp</code> 的情况下，很有可能 <code>std::find</code> 会失败，而 <code>set.find()</code> 会找到想要的结果。这也是为什么要优先调用容器内方法的原因。[注] hash_set 和 hash_map 也有相等和等价的两种设计。虽然不是标准容器。</li>
+<li><p>很好的比较器标准写法：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// operator() 两边全是一样的类型且已经确定的话，就可以使用 binary_function&lt;T1,T2,T3&gt; 这种了。</span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">StringPtrLess</span> :</span> <span class="keyword">public</span> binary_function&lt;<span class="keyword">const</span> <span class="built_in">string</span>*, <span class="keyword">const</span> <span class="built_in">string</span>*, <span class="keyword">bool</span>&gt;&#123;</div><div class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">operator</span><span class="params">()</span> <span class="params">(<span class="keyword">const</span> <span class="built_in">string</span> *ps1, <span class="keyword">const</span> <span class="built_in">string</span> *ps2)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> *ps1 &lt; *ps2;</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">typedef</span> <span class="built_in">set</span>&lt;<span class="built_in">string</span>*, StringPtrLess&gt; StringPtrSet;</div><div class="line">StringPtrSet s;</div><div class="line"></div><div class="line"><span class="comment">// 或者：</span></div><div class="line"></div><div class="line"><span class="comment">// 如果 operator() 两边的类型没有确定的话，在类上边加泛型做泛型类还太恶心，索性就不继承 binary_function了。</span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">StringPtrLess</span> &#123;</span></div><div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Ptr1, <span class="keyword">typename</span> Ptr2&gt;</div><div class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">operator</span><span class="params">()</span> <span class="params">(<span class="keyword">const</span> Ptr1 *pt1, <span class="keyword">const</span> Ptr2 *pt2)</span> </span>&#123;    <span class="comment">// 可以比较任意两个指针</span></div><div class="line">    <span class="keyword">return</span> *pt1 &lt; *pt2;</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">typedef</span> <span class="built_in">set</span>&lt;<span class="built_in">string</span>*, StringPtrLess&gt; StringPtrSet;</div><div class="line">StringPtrSet s;</div></pre></td></tr></table></figure>
+</li>
+<li><p>对于关联容器，<strong>总是让比较函数在等值情况下返回 false</strong>。这一条非常重要！！因为比如说 <code>set&lt;int, less_equal&lt;int&gt;&gt; s</code> 这种，由于钦定比较器是 <code>return l &lt;= r;</code>，因此在 set 的 insert 10 的时候，如果原先已经有了一个 10，那么内部会做 <code>!(10 &lt;= 10) &amp;&amp; !(10 &lt;= 10)</code>，然后当然会返回 <code>false &amp;&amp; false</code>，于是说明 10 和 10 不是等价的。于是第二个 10 会被插入。所以这肯定是错的！根本不能指定 less_equal 作为比较器，这回破坏 set 容器！而对于 multiset，虽然插入不会有问题，但是取 equal_range 的时候，我们本来想要得到两个 10 的迭代器作为 equal_range，但是由于 10 和 10 不等价，我们最多能得到一个 10。因此这是不对的！根本不可以指定 less_equal 作为比较器，即，我们应该 <strong>总是让比较函数在等值情况下返回 false</strong>。</p>
+</li>
+<li><p>不要直接改变 set/mulitset 中的元素。你需要先 erase，再 insert。学完这个 clause，会对 cast 的强转方式的理解上升一个层次。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">set</span>&lt;T&gt;::iterator i = s.find(x);   <span class="comment">// 1. 找到元素迭代器</span></div><div class="line"><span class="keyword">if</span>(i != s.end()) &#123;</div><div class="line">  <span class="function">T <span class="title">temp</span><span class="params">(*i)</span></span>;   <span class="comment">// 2. 复制一份出来。</span></div><div class="line">  <span class="comment">// ...        // 3. do some change on temp</span></div><div class="line">  s.erase(i++); <span class="comment">// 4. remove i  // 递增迭代器保证 i 是有效的。因为下一步将要用到。</span></div><div class="line">  s.insert(i, temp); <span class="comment">// 5. use hint to insert the modified `temp`. O(1).</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>考虑使用 sorted vector 来代替 set、map，如果容器的插删以及查找是<strong>分为两个部分集中进行</strong>的话，那么请使用 sorted vector 代替 set、map。而且缓存命中率会明显 up。<br>不过……if (i != vw.end() &amp;&amp; *i == w) ??? 这里不太明白…???????说是见 19 条??? 然而我并没有看懂 QAQ</p>
+</li>
+<li>当效率至关重要的时候，请在 map::operator[] 与 map::insert 之间谨慎做出选择。<strong>这一条也很有难度</strong>。因为在<code>m[1] = obj;</code><strong>作为添加操作</strong>的时候，其实相当于调用了 <code>pair&lt;map..::iterator, bool&gt; it =  m.insert(make_pair(1, Obj())); it.first-&gt;second = obj;</code> 相当于在 insert 的基础上，又多构造了一个临时的 Obj()，最后还 copy 了一个对象进去。多调用了 3 次没必要的函数，即 Obj() 的 constructor，Obj 的 destructor，以及 Obj 的 operator = 的 copy assignment。在需要效率的时候这个是比较浪费的。但是，在<code>m[1] = obj</code><strong>作为更新操作</strong>的时候，情况正好相反了过来。因为 insert 的时候需要构造临时 pair 才行，pair 之中还要构造临时 obj 才行。这样将会引发比较大的开销 —— 因为是原先已经有过，只更新 value 即可，没有必要连同 key 一起包装成一个 pair。而 operator[] 不需要使用 pair，因此 operator [] 的效率更高。而且语法更优雅。但是后边的代码又涉及到了 23 条没看懂 QAQ 的问题……为何要额外判断一次 <em>i == w 呢???? 见 45 条。因为 lower_bound 如果查找成功就返回查找到的第一个符合要求的元素；但是如果没有成功的话，那么就返回第一个可以插入的位置。因此需要使用 </em>i == w 这个 “相等性判断” 来判断是否查找成功了。注意：虽然 lower_bound 使用了 “等价性” 来作为判断原则，但是最后需要用 “相等性” 来判断是否查找成功。因而，如果 lower_bound 指定的比较器和判断原则不同步，就会出现问题。所以这里需要谨慎下。或者可以使用 equal_range 进行判断则更加轻松，但是比 lower_bound 要更加昂贵。</li>
+<li>散列容器。并不是 STL 标准。但是各种 STL 中均有提供。此条款仅仅是介绍，略。</li>
+</ol>
+<hr>
+<h1 id="第四章-迭代器"><a href="#第四章-迭代器" class="headerlink" title="第四章 迭代器"></a>第四章 迭代器</h1><hr>
+<ol>
+<li>使用 iterator 代替 const_iterator。最好全用 iterator。当然，iterator 可以隐式转换为 const_iterator。</li>
+<li>使用 distance() 和 advance() 将容器的 const_iterator 转换成 iterator。</li>
+<li><p>使用 reverse_iterator 删除的话，需要转为 iterator 才行。但是注意它们的关系：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;   <span class="comment">// 想要删除 3：</span></div><div class="line">v.erase((++find(v.rbegin(), v.rend(), <span class="number">3</span>)).base());  <span class="comment">// 要将返回的 reverse_iterator 先 ++ 再取 base，iterator 就会指向 3 了。否则，iterator 会变成 4。</span></div><div class="line"></div><div class="line"><span class="comment">// 但是，下边的情况是编译不过的！</span></div><div class="line"><span class="comment">// v.erase(-- find(v.rbegin(), v.rend(), 3).base() );  </span></div><div class="line"><span class="comment">// 这样对 vector、string 是不行的。对于其他如 list、map、set 等都是可以的。因为 vector 的 reverse_iterator 取 base 之后返回 iterator，是 T* 的指针类型。而 C 和 C++ 规范规定【函数返回的指针不可以修改】，因此必然会编译错误。所以，只能在 find 结束时候的 reverse_iterator 取 base 之前就预先判断并调整调用 base 之后产生 iterator 的位置才行。</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>如果我们想要性能的提升，而且不需要格式化(比如对于文件中的空格和 tab 也全部读取的话)，我们可以使用 istreambuf_iterator。直接从缓冲区读取是非常快的。而 istream_iterator 是通过 operator &gt;&gt; 从输入流中读取的。</p>
+</li>
+</ol>
+<hr>
+<h1 id="第五章-算法"><a href="#第五章-算法" class="headerlink" title="第五章 算法"></a>第五章 算法</h1><hr>
+<ol>
+<li>确保目标区间足够大。[1] 一定要小心插入到容器的最后。不要用 <code>transform(v.begin(), v.end(), result.end(), func)</code>，而是要用 <code>transform(v.begin(), v.end(), back_inserter(result), func)</code>！！没 malloc 空间且没有 constructor 初始化就复制上去是 UB！ [2] 但是，如果我们要倒着在 result 中插入 v 的话(即 <code>reverse</code>)，就不好弄了。因为 vector 并没有 <code>push_front()</code>，因此没有 <code>front_inserter</code>。因而只能使用另一个技巧：不能倒着插进 result，何不倒着遍历 v 呢？于是可以：<code>transform(v.rbegin(), v.rend(), back_inserter(result), func)</code>。 [3] 如果是在 result 的中间插入整个区间 v 的话，可以使用 inserter。比如在中间插入：<code>transform(v.begin(), v.end(), inserter(result, result.begin()+result.size()/2), func)</code>。但是这样效率对于 vector、string、deque 这样的连续容器肯定是 O(n) + O(重新 allocate 内存)。虽然不能避免 O(n)，但是内存分配还是可以避免。我们可以使用 <code>result.reserve(v.size() + result.size())</code> 预分配内存。 [4] 如果在 [3] reserve 之后再执行 [1] 这种情况，也是不可以的！Effective STL 中说的不明晰。我来补充一下：如果 v 中的元素所在的类中有 const 成员的话，这样的 copy 是会失败的！因为常成员是不允许 copy 的！！只能通过 malloc + copy constructor 进行构造！如今 malloc 有了，但是没有 copy constructor，直接使用 operator = 进行强制复制，也会在成员有 const 的时候编译失败！！/ 而且即便没有失败，也是错的。因为并没有通过 result 的接口来进行 push_back，因此 result 的 size 和 iterator end 并没有发生改变。只是拷贝了内存过去。因而也一定是 UB 行为。 [5] 如果想要直接覆盖掉 result 的话，那么可以写 <code>transform(v.begin(), v.end(), result.begin(), func)</code> 注意 $3 参数不是 <code>front_inserter(result)</code>！！那是插入。而且在 vector 也会编译错误，由于 vector 没有 push_front。这样的话，v 会直接覆盖 result 的空间。但是！这样也是错的。因为没保证 result 的 size 大小大于 v 的 size 大小(注意是 size，不是 capacity)，很可能导致 UB。所以之前要写：<code>if(result.size() &lt; v.size()) { result.resize(v.size()); }</code> 才行。(注意是 resize 不是 reserve！resize 是会 malloc + construct 的，面向容器的 size 属性；而 reserve 是只会 malloc 但是不会 construct 的，面向容器的 capacity 属性。) [6] 或者 <code>result.clear(); result.reserve(v.size()); transform(v.begin(), v.end(), back_inserter(result), func);</code> 也好！！</li>
+<li>了解各种与排序有关的选择。a. 把排名在前 20 个 数组元素取出：[1] paritial_sort 基于堆排序。有序。<code>partial_sort(v.begin(), v.begin()+20, v.end(), Compare)</code> [2] nth_element 能把高于 20 和低于 20 的 element 分开，但是除了第 20 位，其他顺序都不确定。<code>nth_element(v.begin(), v.begin()+19, v.end(), Compare)</code>。注：nth_element 还可以寻找区间的中间值/找到特定百分比的值  b. 按照一等品和二等品的类别进行筛选：[1] paritition：<code>vector&lt;T&gt;::iterator goodEnd = partition(v.begin(), v.end(), hasAcceptableQuality);</code>。[2] 如果对于相同质量级别的 T，要保持他们的相对顺序关系(稳定排序)，可以使用 stable_sort。  [注] partition / stable_sort 只需要 bidirectory_iterator 就可以工作。所以所有标准容器都可以使用 partition / stable sort。若要强行对 list 使用需要 RandomAccessIterator 才能用的 nth_element / partial sort 的话，可以把 list copy 到 vector 中去。而且 list 内置有 sort 函数。</li>
+<li>和 clause 9 一样！是 erase-remove 以及 list.remove()，额外的还有 erase-unique! 以及 list.unique()。</li>
+<li><strong>重要</strong>！！千万不要贸然在 vector<t*> 的容器上使用 remove！！因为 remove 做完之后，极有可能很多指针句柄就被覆盖，从而使堆内存不会被释放！！<strong>非常非常重要</strong>！！！所以，只要遇到可能要释放或者 remove 的话，<strong>就用 vector<shared_ptr<t>&gt; 就好了</shared_ptr<t></strong>！！这样才能够完美！！否则极有可能出现内存泄漏！！</t*></li>
+<li><p>了解哪些算法要求使用排序的区间作为参数：<code>binary_search、lower_bound、upper_bound、equal_range、set_union、set_intersection、set_difference、set_symmetric_difference、merge、inplace_merge、includes</code>。还有虽然不一定要求 sorted，但是经常和 sorted 一起使用：<code>unique、unique_copy</code>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sort(v.begin(), v.end(), greater&lt;<span class="keyword">int</span>&gt;());</div><div class="line"><span class="comment">// bool result = binary_search(v.begin(), v.end(), 5);  // 错误！result 是 false！因为比较器有问题！默认是 less&lt;int&gt;()，所以根本找不到！</span></div><div class="line"><span class="keyword">bool</span> result = binary_search(v.begin(), v.end(), <span class="number">5</span>, greater&lt;<span class="keyword">int</span>&gt;()); <span class="comment">// 正确～</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>通过 mismatch 或者 lexicographical_compare 实现简单的忽略大小写的字符串比较。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 只是代码记录：</span></div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">ciCharLess</span><span class="params">(<span class="keyword">char</span> c1, <span class="keyword">char</span> c2)</span></span>&#123;</div><div class="line">  <span class="keyword">return</span> <span class="built_in">tolower</span>(<span class="keyword">static_cast</span>&lt;<span class="keyword">unsigned</span> <span class="keyword">char</span>&gt;(c1)) &lt; <span class="built_in">tolower</span>(<span class="keyword">static_cast</span>&lt;<span class="keyword">unsigned</span> <span class="keyword">char</span>&gt;(c2)); <span class="comment">// 为什么要强转为 unsigned char ??? 好像因为 tolower 只接受 unsigned char???</span></div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">ciStringCompare</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span> &amp;s1, <span class="keyword">const</span> <span class="built_in">string</span> &amp;s2)</span></span>&#123;</div><div class="line">  <span class="keyword">return</span> lexicographical_compare(s1.begin(), s1.end(), s2.begin(), s2.end(), ciCharLess);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 取巧：</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">ciStringCompare</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span> &amp;s1, <span class="keyword">const</span> <span class="built_in">string</span> &amp;s2)</span></span>&#123;</div><div class="line">  <span class="keyword">return</span> stricmp(s1.c_str(), s2.c_str());   <span class="comment">// 非标准库函数</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>C++11 中已经有了 copy_if 了。一开始不完美的 copy_if 使用 remove_copy_if 和 not1 配接器实现的。但是实现的 copy_if 的最后一个断言参数必须接受 ptr_fun(func) 这样丑恶的配接器。因此还是要手动一个一个遍历实现才行啊。</p>
+</li>
+<li>accumulate 这个函数在函数式编程中是相当强大的。这里也是一样。不过很值的在意的是，Mayers 在最后提到的，accumulate 不允许副作用，比如修改外部的全局变量等等；像书上的栗子中，把 $4 的 operator () 的函数对象所在的类中设置成员变量并且修改也算是“副作用”。而 for_each 允许。这是为什么呢？</li>
+</ol>
+<hr>
+<h1 id="第六章-函数子、函数子类及其他"><a href="#第六章-函数子、函数子类及其他" class="headerlink" title="第六章 函数子、函数子类及其他"></a>第六章 函数子、函数子类及其他</h1><hr>
+<ol>
+<li><p>使用 Bridge Pattern 来创建一个桥接类，来给算法传递小型的比较器来代替巨大且多态的函数对象。(非常有用！) 因为 algorithm 所接收的 Comp 统统都是按值传递的！虽然可以强行改变为引用，但是极其有可能会发生别的地方的编译错误。比如 <code>for_each&lt;int, DoSomething &amp;&gt;(v.begin(), v.end(), dosth);</code>。所以要尽量使用桥接的方式。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">BPFC</span> :</span> <span class="keyword">public</span> unary_function&lt;T, <span class="keyword">void</span>&gt; &#123; <span class="comment">// BPFC: Big Polymorphic Functor class</span></div><div class="line"><span class="keyword">private</span>:</div><div class="line">  Widget w;   <span class="comment">// 大量的数据</span></div><div class="line">  <span class="keyword">int</span> x;</div><div class="line">  ...</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">operator</span> <span class="params">()</span> <span class="params">(<span class="keyword">const</span> T &amp; val)</span> <span class="keyword">const</span></span>; <span class="comment">// 还是多态的。传值的话容易引发剥离问题。</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 可以把 BPFC 类修改为 BPFCImpl，而把桥接类命名为 BPFC：</span></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">BPFCImpl</span> :</span> <span class="keyword">public</span> unary_function&lt;T, <span class="keyword">void</span>&gt; &#123; <span class="comment">// 和上边一样，除了多了个虚析构函数和一个友元。</span></div><div class="line"><span class="keyword">private</span>:</div><div class="line">  Widget w;</div><div class="line">  <span class="keyword">int</span> x;</div><div class="line">  ...</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">operator</span> <span class="params">()</span> <span class="params">(<span class="keyword">const</span> T &amp; val)</span> <span class="keyword">const</span></span>;</div><div class="line">  <span class="keyword">virtual</span> ~BPFCImpl();    <span class="comment">// 由于是多态的，必须用虚析构函数！！</span></div><div class="line"><span class="keyword">friend</span> <span class="class"><span class="keyword">class</span> <span class="title">BPFC</span>&lt;T&gt;;</span>     <span class="comment">// 多了个友元！让 BPFC 能够访问！</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">BPFC</span> :</span> <span class="keyword">public</span> unary_function&lt;T, <span class="keyword">void</span>&gt; &#123; <span class="comment">// 也要继承 unary_function。因为同样实现了 operator ()，虽然只不过是转调用 BPFCImpl 的 operator ()，但是也要实现 unary_function.</span></div><div class="line"><span class="keyword">private</span>:</div><div class="line">  BPFCImpl&lt;T&gt;* pImpl;   <span class="comment">// 其实书中建议改成 shared_ptr&lt;BPFCImpl&lt;T&gt;&gt; pImpl;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">operator</span><span class="params">()</span> <span class="params">(<span class="keyword">const</span> T &amp; val)</span> <span class="keyword">const</span> </span>&#123; pImpl -&gt; <span class="keyword">operator</span>()(val); &#125;   <span class="comment">// 转调用！</span></div><div class="line">      <span class="comment">// 这样，就把原先一个超多数据且是多态的大对象变成了一个单态的小对象！</span></div><div class="line">      <span class="comment">// 唯一需要注意的是，需要谨慎处理 BPFC 的复制动作 (没看懂) ????? 书中的建议是最好成员变量使用引用计数 shared_ptr。为啥 ?????</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+</li>
+<li><p>要保证一个 functor 是纯函数(这一章节很棒，描述了 remove_if 中由于要把 带有计数器副作用，想要删除第三个元素的 functor 传递给 find 和 remove_copy_if 两次而导致产生 UB 现象：传递给 find 的时候计数器为 0，find 结束之后计数器为 3；但是到 remove_copy_if 的时候语义应为计数器为 3，但是由于是复制 remove_if 的 functor，造成计数器还是 0，因而第 3、6 位置的两个元素全被删除。)。一个限制方法就是：在 operator()(…) 后边加上 const 限制一下！！</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> ... &#123;</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">operator</span><span class="params">()</span> <span class="params">(...)</span> <span class="keyword">const</span></span>;  <span class="comment">// 注意这个 const ！！确实应该写这个。</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+</li>
+<li><p>如果一个 class 是一个 functor (重载了 operator())，那么应该让它可配接。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ptr_fun 可以对 函数指针使用。让它暂时升级成为一个函数对象(class)。</span></div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isInteresting</span><span class="params">(<span class="keyword">int</span> v)</span></span>;    <span class="comment">// 一个 predicate 函数</span></div><div class="line"><span class="keyword">auto</span> it = find_if(v.begin(), v.end(), isInteresting);   <span class="comment">// 找到符合的第一个 elem</span></div><div class="line"><span class="keyword">auto</span> itt = find_if(v.begin(), v.end(), not1(ptr_fun(isInteresting))); <span class="comment">// 如果要找到不符合的第一个，我们需要套上 not1 和 ptr_fun。仅仅套上一层 not1 是不够的。这是因为 not1 需要 unary_function::argument_type 的 type 泛型定义，但是一个函数指针是不可能有的。所以用继承 unary_function 的 ptr_fun 把 isInteresting 函数指针包上一层，让它具有 unary_function::argument_type 而已。</span></div><div class="line"></div><div class="line"><span class="comment">// 注意：在自己编写可以继承自 unary_function 和 binary_function 的 函数对象(class) 的时候：</span></div><div class="line"><span class="comment">// 一般而言，传递给 unary_function 和 binary_function 的非指针类型都需要去掉 const 和 &amp; 部分(没试验过) 作为模板参数。但是如果有指针的话，可以用 const T* 作为模板参数。</span></div><div class="line"></div><div class="line"><span class="comment">// 对 非指针的类型：</span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">WidgetCompare</span> :</span> <span class="keyword">public</span> binary_function&lt;Widget, Widget, <span class="keyword">bool</span>&gt; &#123; <span class="comment">// 注意只写了 Widget 作为模板参数！</span></div><div class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">const</span> Widget &amp; lhs, <span class="keyword">const</span> Widget &amp; rhs)</span> <span class="keyword">const</span></span>;  <span class="comment">// 注意这里的类型却又变成了 const Widget &amp; 了！！</span></div><div class="line">&#125;;</div><div class="line"><span class="comment">// 对 指针的类型：</span></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">WidgetCompare</span> :</span> <span class="keyword">public</span> binary_function&lt;<span class="keyword">const</span> Widget *, <span class="keyword">const</span> Widget *, <span class="keyword">bool</span>&gt; &#123; <span class="comment">// 这里用了完全体的 const Widget *...... 然而并不知道为什么。</span></div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">const</span> Widget *lhs, <span class="keyword">const</span> Widget *rhs)</span> <span class="keyword">const</span></span>;  <span class="comment">// 这里和模板参数的声明一模一样！！  WHY ?????</span></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+</li>
+<li><p>理解 ptr_fun、mem_fun、mem_fun_ref 的来由。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line">几个要注意的地方：(以下全用 for_each 举例)</div><div class="line">1. 对于普通的函数指针而言，使用 ptr_fun 进行封装的地点仅仅在于函数指针前边有没有包裹配接器 not1、not2、bind1st、bind2nd。有的话因为要调用 unary_function::argument_type，就必须要使用 ptr_fun。也可以见上一个条款。</div><div class="line">2. 对于容器中存放指针，且 for_each 要接收一个成员函数指针而言，无论有没有配接器 not1 等，由于他们需要使用 obj-&gt;(*ptr)() 的形式调用，因此必须使用 mem_fun 来进行配接。</div><div class="line">3. 对于容器中存放对象，且 for_each 要接收一个成员函数指针而言，无论有没有配接器 not1 等，由于他们需要使用 obj.(*ptr)() 的形式调用，因此必须使用 mem_fun_ref 来进行配接。</div><div class="line">4. 重要：指针容器支持多态，而对象容器由于剥离现象，不会支持多态。而指针容器可以使用 vector&lt;shared_ptr&lt;T&gt;&gt; 来进行封装。</div><div class="line">*/</div></pre></td></tr></table></figure>
+</li>
+<li><p>确保 less<t> 和 operator &lt; 具有相同的语义。也就是，如果要自定义比较器，最好选择自己定义一个类，而不是特化 std::less<t> 的标准模板库。仅此而已：保证 less<t> 的完整性，不要乱修改它，需要的时候自己定义一个新的 class，让 std::less<t> 的实现是默认的即可。</t></t></t></t></p>
+</li>
+</ol>
+<hr>
+<h1 id="第七章-在程序中使用-STL"><a href="#第七章-在程序中使用-STL" class="headerlink" title="第七章 在程序中使用 STL"></a>第七章 在程序中使用 STL</h1><hr>
+<ol>
+<li><p>算法调用优先于手写循环。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 很好的栗子：想要对数组中的每个元素都加上 41，然后把整体插入到一个 vector 的前边：</span></div><div class="line">transform(arr, arr + n, inserter(v, v.begin()), bind2nd(plus&lt;<span class="keyword">double</span>&gt;(), <span class="number">41</span>));</div><div class="line"><span class="comment">// 注意几点：inserter 虽然指定 v.begin() 是插入位置，但是 inserter 内部会随着插入，会把内部的 iter + 1。也就是，最终插入的结果并不是和原来的顺序相反的。但是，如果不使用内置算法，而是手动写循环的话，有可能写成这样：insert(d.begin(), arr[i])，这样就是彻头彻尾地每次都插在 begin 处，因为 insert 函数不会对迭代器进行自增。因而，最终插入的结果是和原来的顺序正好相反，不是我们想要的结果了。</span></div><div class="line"><span class="comment">// 记住：inserter 内部会随着每插入一个元素，会把内部的 iter ++。</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>容器的成员函数优先于同名的算法。[1] 无论是效率还是正确性(见 19 条。<code>std::find</code> 的条件是相等，即 <code>operator ==</code>；而 <code>set&lt;T&gt;::find</code> 的条件是等价性，即 <code>operator &lt; / &gt;</code> )。[2] 且，map 本质使用 pair 储存，如果用 <code>std::count</code>，你肯定需要自定义比较器。而 map 内部的 <code>map&lt;K,V&gt;::count</code> 则是只比较 key 不比较 value。如何使用它们，需要我们的权衡。[3] 在 list 中，同名的 <code>remove、remove_if、unique、sort、merge、reverse</code> 全都在效率上大大提高，因为它们被设定成了仅仅改变 list 的指针而不用重新 allocate 并复制对象。但是 std 算法的处理则是需要大量复制来实现这些算法。因此 list 的成员算法性能肯定更高。且，list 的 <code>remove、remove_if、unique</code> 的语义也不同 —— 不必使用 <code>erase-remove/remove_if/unique</code> 的手段进行删除，而是设定成了直接删除。而 <code>std::sort</code>(需要 RandomAccessIterator) 和 <code>std::merge</code> 根本就不能用在 list 上。</p>
+</li>
+<li><p>正确区分 <code>count</code>、<code>find</code>、<code>binary_search</code>、<code>lower_bound</code>、<code>upper_bound</code> 以及 <code>equal_range</code>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// count 某种程度可以代替 find：只不过它会遍历全部区间，但是 find 找到就会返回。</span></div><div class="line"><span class="keyword">if</span> (count(v.begin(), v.end(), x)) &#123;...&#125; <span class="comment">// count 返回 int。不等于0 的话就是找到了。</span></div><div class="line"><span class="keyword">if</span> (find(v.begin(), v.end(), x) != v.end()) &#123;...&#125;   <span class="comment">// 和上边一样。只不过 find 效率高些。因为不用遍历全部区间。</span></div><div class="line"></div><div class="line"><span class="comment">// 在 list 中插入的时候，保持所有元素的顺序：</span></div><div class="line">l.insert(upper_bound(l.begin(), l.end(), newX, Comp()), newX); <span class="comment">// 插入到原先有的 newX 之后，如果没有，就找 upper_bound 返回的合适的位置进行插入。</span></div><div class="line"></div><div class="line"><span class="comment">// vector 中删除比某个值小的所有元素：</span></div><div class="line">v.erase(v.begin(), lower_bound(v.begin(), v.end(), Predicate()));</div><div class="line"><span class="comment">// vector 中删除这个值以及比这个值小的所有元素：</span></div><div class="line">v.erase(v.begin(), upper_bound(v.begin(), v.end(), Predicate()));</div><div class="line"></div><div class="line"><span class="comment">// vector 中 equal_range 代替 find 和 count：</span></div><div class="line"><span class="keyword">auto</span> &amp; iter_pair = equal_range(v.begin(), v.end(), x);  </div><div class="line"><span class="keyword">if</span> (iter_pair.first != iter_pair.second) &#123;  <span class="comment">// 代替 find</span></div><div class="line">  ... <span class="comment">// 存在 x 这样的值</span></div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">  ... <span class="comment">// 不存在 x 这样的值。因为返回的两个区间迭代器指向同一个地方</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">int</span> count = distance(iter_pair.first, iter_pair.second);  <span class="comment">// 代替 count。</span></div><div class="line"></div><div class="line"><span class="comment">// 对于关联容器：set、map 等，不必使用 std::count、std::find、std::equal_range，直接使用 m.count、m.find、m.equal_range 即可！</span></div></pre></td></tr></table></figure>
+<p>搬运：<br><img src="https://wind2412.files.wordpress.com/2017/09/14e993cabe8749c98832f576b9f73c00.jpg?w=816&amp;h=612&amp;zoom=2" alt="IMG_0895.JPG"></p>
+</li>
+<li><p>考虑使用函数对象而不是函数作为 STL 算法的参数。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">// 1. 函数指针会拒绝 inline 优化。如果传入函数指针，有可能本来 inline 的函数就无效了。</span></div><div class="line"> <span class="comment">//    比如 sort() 要快于 qsort()。</span></div><div class="line"> </div><div class="line"> <span class="comment">// 2. 有些情况可能会产生编译不通过的问题......</span></div><div class="line"> <span class="built_in">set</span>&lt;<span class="built_in">string</span>&gt; s&#123;<span class="string">"haha"</span>, <span class="string">"hehe"</span>&#125;;</div><div class="line"> transform(s.begin(), s.end(), ostream_iterator&lt;<span class="built_in">string</span>::size_type&gt;(<span class="built_in">cout</span>, <span class="string">" "</span>), mem_fun_ref(&amp;<span class="built_in">string</span>::size));	<span class="comment">// g++ 编译通过但是 clang++ 编译不通过。</span></div><div class="line">  </div><div class="line"> <span class="comment">// 3. Mayers 给定另一个例子我使用 LLVM 和 GCC 都测试过，完全没有问题啊......还是把代码列上来把：</span></div><div class="line"> </div><div class="line"> <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function">T <span class="title">average</span><span class="params">(T val1, T val2)</span> </span>&#123;		<span class="comment">// 例子 2</span></div><div class="line">	<span class="keyword">return</span> (val1 + val2)/<span class="number">2</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> InputIter1, <span class="keyword">typename</span> InputIter2&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">writeAverage</span><span class="params">(InputIter1 begin1, InputIter1 end1, InputIter2 begin2)</span> </span>&#123;</div><div class="line">	transform(begin1, end1, begin2, ostream_iterator&lt;<span class="keyword">typename</span> iterator_traits&lt;InputIter1&gt;::value_type&gt;(<span class="built_in">cout</span>, <span class="string">" "</span>), average&lt;<span class="keyword">typename</span> iterator_traits&lt;InputIter1&gt;::value_type&gt;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; s1&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</div><div class="line"><span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt; s2&#123;<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>&#125;;</div><div class="line">transform(s1.begin(), s1.end(), s2.begin(), ostream_iterator&lt;<span class="keyword">typename</span> iterator_traits&lt;<span class="keyword">decltype</span>(s1.begin())&gt;::value_type&gt;(<span class="built_in">cout</span>, <span class="string">" "</span>), average&lt;<span class="keyword">typename</span> iterator_traits&lt;<span class="keyword">decltype</span>(s1.begin())&gt;::value_type&gt;);		<span class="comment">// 这第二个例子函数指针倒是没有问题的啊。</span></div><div class="line">writeAverage(s1.begin(), s1.end(), s2.begin());</div></pre></td></tr></table></figure>
+</li>
+<li><p>避免产生 “直写型” (write-only) 的代码。“直写型” 就是指通过灵感直接产生的代码（逃，写出来一大长串顺风顺水，但是阅读起来或者回忆起来根本看不懂。23333</p>
+</li>
+<li>略。并不是特别重要。</li>
+<li>略。</li>
+<li>略。</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/25/如果不想让你的mac在访问next主题的博客的时候烫烫烫/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1376,7 +1614,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
