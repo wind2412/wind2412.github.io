@@ -1,0 +1,796 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JVM," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="前言首先甩仓库：wind jvm一开始只是想写一个 java 的 class file parser。后来把这东西变成了一个 tool，请左转我的javap。后来看到 @racaljk 同学用 java 实现了一个小虚拟机，感觉很有意思，遂学习了一波规范，然后写了个 C++ 的。大三下准备实习，但是还没什么能拿出手的。所以正好现在大三上有点时间，于是花了两个月写了一个。 类似项目：@racaljk">
+<meta name="keywords" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="虚拟机完成～">
+<meta property="og:url" content="http://yoursite.com/2017/12/28/虚拟机完成～/index.html">
+<meta property="og:site_name" content="wind2412的部落格✨～">
+<meta property="og:description" content="前言首先甩仓库：wind jvm一开始只是想写一个 java 的 class file parser。后来把这东西变成了一个 tool，请左转我的javap。后来看到 @racaljk 同学用 java 实现了一个小虚拟机，感觉很有意思，遂学习了一波规范，然后写了个 C++ 的。大三下准备实习，但是还没什么能拿出手的。所以正好现在大三上有点时间，于是花了两个月写了一个。 类似项目：@racaljk">
+<meta property="og:image" content="https://wind2412.files.wordpress.com/2017/12/b7976a42d4d265ec2c89f1f11f6c3f69.jpg">
+<meta property="og:updated_time" content="2017-12-28T13:07:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="虚拟机完成～">
+<meta name="twitter:description" content="前言首先甩仓库：wind jvm一开始只是想写一个 java 的 class file parser。后来把这东西变成了一个 tool，请左转我的javap。后来看到 @racaljk 同学用 java 实现了一个小虚拟机，感觉很有意思，遂学习了一波规范，然后写了个 C++ 的。大三下准备实习，但是还没什么能拿出手的。所以正好现在大三上有点时间，于是花了两个月写了一个。 类似项目：@racaljk">
+<meta name="twitter:image" content="https://wind2412.files.wordpress.com/2017/12/b7976a42d4d265ec2c89f1f11f6c3f69.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/28/虚拟机完成～/"/>
+
+
+
+
+
+  <title>虚拟机完成～ | wind2412的部落格✨～</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-97977742-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?733fc494d1c5b28a5bef03609254381d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">wind2412的部落格✨～</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/28/虚拟机完成～/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wind2412">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blue_sky.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wind2412的部落格✨～">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                虚拟机完成～
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-28T21:06:00+08:00">
+                2017-12-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>首先甩仓库：<a href="https://github.com/wind2412/wind_jvm" target="_blank" rel="external">wind jvm</a><br>一开始只是想写一个 java 的 class file parser。后来把这东西变成了一个 tool，请左转我的<a href="https://github.com/wind2412/javap" target="_blank" rel="external">javap</a>。后来看到 @racaljk 同学用 java 实现了一个小虚拟机，感觉很有意思，遂学习了一波规范，然后写了个 C++ 的。大三下准备实习，但是还没什么能拿出手的。所以正好现在大三上有点时间，于是花了两个月写了一个。</p>
+<h2 id="类似项目："><a href="#类似项目：" class="headerlink" title="类似项目："></a>类似项目：</h2><p>@racaljk 的 <a href="https://github.com/racaljk/yvm" target="_blank" rel="external">YVM</a>。不过 @racaljk 学习貌似很忙，一直没有更新QAQ。最初知道你是因为你的 hosts，实在是帮了不少忙，非常感激。而且 programming 也很强，实在佩服。<br>@lfkdsk 学长的 <a href="https://github.com/JustVM/JustVM" target="_blank" rel="external">JustVM</a>。学长实在很强，看到一堆的个人项目就五体投地了。当时我也因为 Jar 文件解包比较麻烦，看到 @lfkdsk 是直接文件读取 zip 的。因为没有现成的 zip 库也不想在上边花太多时间，所以我就采取直接把 rt.jar 全部解压的省事策略了。话说回来，大工和我们还是邻居（，而且 @lfkdsk 学长貌似也是哈尔滨人OWO。<br>以及 @zxh0 大大的 <a href="https://github.com/zxh0/jvm.go.git" target="_blank" rel="external">jvm.go</a>。虽然没学过 go 语言，不过还是能看懂一些，也参考了部分思路。<br>不过最重点的还是 openjdk 的 hotspot…… 虽然管中窥豹，不过也可以略见一斑了，学到了非常多的东西～</p>
+<h2 id="具体"><a href="#具体" class="headerlink" title="具体"></a>具体</h2><p>我的 wind jvm 也就是个小玩具。代码总量用 cloc 去一下水分，也就 15k 左右。一共花了两个月代码时间，其实还有一个月是在学习各种乱七八糟的支持项目的知识。还 reference 了各种东西，列举如下：</p>
+<ul>
+<li>jvm8 spec</li>
+<li>周志明大大的《深入理解 java 虚拟机》</li>
+<li>陈涛大大的《HotSpot 实战》</li>
+<li>（日）中村成洋先生的《垃圾回收的算法与实现》（中译）</li>
+<li>等等。重要的还有一堆网络资源。比如 R大的 hllvm 论坛：<a href="http://hllvm.group.iteye.com" target="_blank" rel="external">hllvm论坛～</a><h2 id="那么说下打开方式"><a href="#那么说下打开方式" class="headerlink" title="那么说下打开方式"></a>那么说下打开方式</h2>我的 README 上都有写，在这里重写一遍。</li>
+</ul>
+<ol>
+<li>首先我只支持 linux 和 mac。因为底层用了各种操作系统函数，pthread，stat 啥的。我的机器是 mac，所以就不支持 Windows 了。然后呢，我们需要 boost 库。用 brew 安装和 apt-get 啥的，yum 啥的都行。mac 就是 <code>brew install boost</code>，然后 ubuntu 应该是 <code>sudo apt-get install libboost-all-dev</code>。</li>
+<li>这样我们就有了 boost 支持了。于是我们应该去 Makefile 修改一下，因为我配置的是我机器的环境，而且没用 cmake。所以要手动修改，把我机器上的 boost 路径目录换成你的就可以了。比如如果是 mac 的话，把 ifeq 中的 <code>$(CC) $(LINK_FLAGS) -L/usr/local/Cellar/boost/1.60.0_2/lib/ ....</code> 里边的目录换成你自己的就行。如果是 linux，就把 else 中的 <code>$(CC) $(LINK_FLAGS) -L/usr/lib/x86_64-linux-gnu/</code> 换成你自己的。不过如果是 ubuntu，八成不需要改，因为目录的版本无关。其他的 linux 就不知道了。</li>
+<li>然后呢，你需要知道你的 jdk class 文件路径。mac 上，一般在 <code>/Library/Java/JavaVirtualMachines/jdk1.8xxx.jdk/Contents/Home/jre/lib/</code> 下的 rt.jar 文件。如果是 linux，一般在 <code>/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/</code> 下。配置到 config.xml 中相应位置就可以了。</li>
+<li>于是应该就完事了。直接跑 make -j 8 啥的 8 线程编译就可以。当然如果你是虚拟机，虚拟内存没配置够的话就算了，直接跑 make -j 2 或者 make -j 3 这种就行了。</li>
+<li>之后 <code>bin</code> 目录会出现 <code>wind_jvm</code> 这个 executable file。注意：一定要在 <code>wind_jvm/</code> 目录运行 <code>./bin/wind_jvm Test1</code> 这样的命令。因为内部我的 system lib path 是通过当前路径来获取的。如果不在 <code>wind_jvm/</code> 目录下跑，就应该会报错。然后我给了十几个 TestX.java 文件，执行 <code>make test</code> 就能编译。有一个 Test7.java 是不行的。那个只有 debug version jvm 的工具才能编译。所以我编译好了直接放上去了。然后运行 <code>./bin/wind_jvm Test1</code> 这种命令就好。不加 <code>.class</code> 后缀，参数必须有且仅有一个。</li>
+<li>然后就可以玩了。不过只支持特定实现好的库，你要 socket 什么的都是没有的。不过日后实现看情况可以往上加，你也可以来 pull request 哦。</li>
+<li>如果有 issue 请在 github 上上传 issue。<h2 id="特性支持"><a href="#特性支持" class="headerlink" title="特性支持"></a>特性支持</h2></li>
+<li>完整的 ClassFileParser。那个 tool 的地址我已经刚才写过了。这东西才 3k 行多一点而已。</li>
+<li>支持大部分常用反射机制。其他的是我没写的。因为太多了……不过想写的话肯定是有的。具体在 <code>src/native/sun_reflect_Reflection.hpp(cpp)</code>，<code>src/native/sun_reflect_NativeConstructorAccessorImpl.hpp(cpp)</code> 等等文件中。</li>
+<li>支持底层的 Unsafe 类中的大部分。如果想要支持 jdk 类库，这个类是必须要写且必须实现的。这个类可以添加 java 不能而 C++ 能的指针操作。必须强行交换两个对象什么的。当然，还需要有少量 CAS support。并发非常必要。</li>
+<li>支持简单多线程。Thread 类的底层方法是通过操作系统级别的线程支持的。比如 pthread 库。</li>
+<li>支持异常机制。stack unwind 栈回溯，athrow 以及可以 catch 字节码已经处理好的异常表。Test7.java 就是测试多线程异常的。</li>
+<li>支持 GC。parallel GC 支持的保证是 stop-the-world (调 bug 可是好长好长时间好痛苦哇)，使用了 GC-Root 算法，以及 GC 复制算法。见：<a href="https://github.com/wind2412/wind_jvm/blob/master/src/runtime/gc.cpp" target="_blank" rel="external">gc.cpp</a>……虽然代码量不大确是调试时间最长最难受的部分……毕竟这不是单线程 GC，是多线程的……不过我的实现肯定也是 too young 的，因为并没有各种菊苣的 paper 的支持。</li>
+<li>部分支持 lambda，比如简单的 invokedynamic 类似 <code>Thread t = new Thread(() -&gt; System.out.println(&quot;hello world&quot;));</code>，Test4,5,6,8,11,13 是测试 lambda 和 invoke(MethodHandle) 的。不过很遗憾这一部分理解有些跟不上，虽然支持是比较容易，但是想要理解类库究竟是怎么实现 lambda，还需要积累和进一步研究。因此只能支持部分。[注：部分测试用例 from network]。具体实现代码请见：<a href="https://github.com/wind2412/wind_jvm/blob/master/src/runtime/bytecodeEngine.cpp#L3385-L3544" target="_blank" rel="external">invokedynamic</a>。当然不可能只有这点。这里是核心部分。还有待支持更多。</li>
+<li>字节码方面，支持绝大多数，没用到的就没写（怕写错），wide 指令这种，我是没加的。<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2></li>
+<li>和 openjdk 一样的，klass oop 二分模型。</li>
+<li>解释型。完全在解释 bytecode。因此效率上肯定差强人意。</li>
+<li>按照真正的 jvm 跑 class 文件的流程运行（几乎）。初始化 mirror，初始化基础类，使用 C++ 实现的 bootstraploader，进而调用 java 的 AppClassLoader 来加载 main class。</li>
+<li>每个线程配上了不同的颜色（，方便观看（其实更重要的是方便调试哇。（笑）</li>
+<li>等等。细节太多了。如果你想看更多的细节，下文有字节码执行的流程输出。<h2 id="糟粕"><a href="#糟粕" class="headerlink" title="糟粕"></a>糟粕</h2></li>
+<li>一开始什么也不会的时候，用字符串查找类……这是特别悲伤的设计。严重拖慢速度，历史遗留问题。</li>
+<li>有时跑 Test7 这种多线程测试用例碰到异常的时候，最后会段错误。其实是完全可以解决的。用 pthread_cancel 配上 pthread_join 就可以完全解决。不过一开始的设计是没考虑到这么多，直接把所有线程 detach 了。如果要改，势必代码的形状会特别悲伤。所以左思右想还是维持原状，并不影响运行结果。其实这样是并不对的，java 要求某一线程抛异常，不会影响其他线程的执行。其实真正的实现是要用 join 的。</li>
+<li>等等。<h2 id="输出细节"><a href="#输出细节" class="headerlink" title="输出细节"></a>输出细节</h2>如果想要开启更多的细节，可以在 Makefile 中修改，原本是 <code>CPP_FLAGS := -std=c++14 -O3 -pg</code>，我在后边写了一个加上 <code>-DBYTECODE_DEBUG -DDEBUG</code> 的，启用这个就可以启用所有的字节码调试代码。引用一张月初放在博客上的图:<br><img src="https://wind2412.files.wordpress.com/2017/12/b7976a42d4d265ec2c89f1f11f6c3f69.jpg" alt="IMAGE"><br>如果还要看 classfile 的文件 parse，运行时常量池的解析，以及字符串池的常量字符串，可以打开 <code>-DKLASS_DEBUG -DPOOL_DEBUG -DSTRING_DEBUG</code> 宏，然后重新编译就好。<br>不过！如果这么打开，由于一开始初始化虚拟机，需要加载各种类，需要跑各种字节码，输出会是巨量的。没记错的话跑一个 hello world 貌似就要上十w的字节码执行量吧。因为我是解释型，自然执行的机器码比这还多；如果是编译型，那就快了。所以如果发现终端吃不消，请及时关闭。后期由于字节码输出量巨大，我从来都是关闭这些宏的，只看结果忽略执行过程。<h2 id="写文章的目的"><a href="#写文章的目的" class="headerlink" title="写文章的目的"></a>写文章的目的</h2>为了骗 star（，同时也是为了交友（。希望有同样爱好和兴趣的童鞋能够一起偷(yu)税(yue)地交流。那么就写到这吧。同时发到博客和知乎。<h2 id="最终的感谢"><a href="#最终的感谢" class="headerlink" title="最终的感谢"></a>最终的感谢</h2>感谢这个领域的先驱们，感谢各种热心的回复，感谢给我思路和灵感的人们。（热泪盈眶）<br>尤为感谢《spec》《深入java虚拟机》《hotspot实战》的作者们，以及R大的论坛和R大在知乎上传播的各种深入的虚拟机知识。实在是感激不尽！<br>另：<br>就是一个区区玩具，就不胡乱@了。供学习和交流～随便乱加了一个开源协议，虽然没什么用处。</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/02/纪念伟大的-hello-world/" rel="prev" title="纪念伟大的 hello world!">
+                纪念伟大的 hello world! <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="uyan_frame"></div>
+    
+  </div>
+
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/blue_sky.jpg"
+               alt="wind2412" />
+          <p class="site-author-name" itemprop="name">wind2412</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/wind2412" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接o(*////▽////*)q
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.google.com/" title="Google~" target="_blank">Google~</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#类似项目："><span class="nav-number">1.1.</span> <span class="nav-text">类似项目：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体"><span class="nav-number">1.2.</span> <span class="nav-text">具体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#那么说下打开方式"><span class="nav-number">1.3.</span> <span class="nav-text">那么说下打开方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特性支持"><span class="nav-number">1.4.</span> <span class="nav-text">特性支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现细节"><span class="nav-number">1.5.</span> <span class="nav-text">实现细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#糟粕"><span class="nav-number">1.6.</span> <span class="nav-text">糟粕</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输出细节"><span class="nav-number">1.7.</span> <span class="nav-text">输出细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写文章的目的"><span class="nav-number">1.8.</span> <span class="nav-text">写文章的目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最终的感谢"><span class="nav-number">1.9.</span> <span class="nav-text">最终的感谢</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wind2412</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    
+
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2131821"></script>
+      <!-- UY END -->
+    
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
