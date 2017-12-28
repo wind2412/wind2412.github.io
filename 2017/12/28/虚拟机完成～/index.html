@@ -116,7 +116,7 @@
 <meta property="og:site_name" content="wind2412的部落格✨～">
 <meta property="og:description" content="前言首先甩仓库：wind jvm一开始只是想写一个 java 的 class file parser。后来把这东西变成了一个 tool，请左转我的javap。后来看到 @racaljk 同学用 java 实现了一个小虚拟机，感觉很有意思，遂学习了一波规范，然后写了个 C++ 的。大三下准备实习，但是还没什么能拿出手的。所以正好现在大三上有点时间，于是花了两个月写了一个。 类似项目：@racaljk">
 <meta property="og:image" content="https://wind2412.files.wordpress.com/2017/12/b7976a42d4d265ec2c89f1f11f6c3f69.jpg">
-<meta property="og:updated_time" content="2017-12-28T13:07:28.000Z">
+<meta property="og:updated_time" content="2017-12-28T13:09:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="虚拟机完成～">
 <meta name="twitter:description" content="前言首先甩仓库：wind jvm一开始只是想写一个 java 的 class file parser。后来把这东西变成了一个 tool，请左转我的javap。后来看到 @racaljk 同学用 java 实现了一个小虚拟机，感觉很有意思，遂学习了一波规范，然后写了个 C++ 的。大三下准备实习，但是还没什么能拿出手的。所以正好现在大三上有点时间，于是花了两个月写了一个。 类似项目：@racaljk">
@@ -371,8 +371,9 @@
 <li>周志明大大的《深入理解 java 虚拟机》</li>
 <li>陈涛大大的《HotSpot 实战》</li>
 <li>（日）中村成洋先生的《垃圾回收的算法与实现》（中译）</li>
-<li>等等。重要的还有一堆网络资源。比如 R大的 hllvm 论坛：<a href="http://hllvm.group.iteye.com" target="_blank" rel="external">hllvm论坛～</a><h2 id="那么说下打开方式"><a href="#那么说下打开方式" class="headerlink" title="那么说下打开方式"></a>那么说下打开方式</h2>我的 README 上都有写，在这里重写一遍。</li>
+<li>等等。重要的还有一堆网络资源。比如 R大的 hllvm 论坛：<a href="http://hllvm.group.iteye.com" target="_blank" rel="external">hllvm论坛～</a></li>
 </ul>
+<h2 id="那么说下打开方式"><a href="#那么说下打开方式" class="headerlink" title="那么说下打开方式"></a>那么说下打开方式</h2><p>我的 README 上都有写，在这里重写一遍。</p>
 <ol>
 <li>首先我只支持 linux 和 mac。因为底层用了各种操作系统函数，pthread，stat 啥的。我的机器是 mac，所以就不支持 Windows 了。然后呢，我们需要 boost 库。用 brew 安装和 apt-get 啥的，yum 啥的都行。mac 就是 <code>brew install boost</code>，然后 ubuntu 应该是 <code>sudo apt-get install libboost-all-dev</code>。</li>
 <li>这样我们就有了 boost 支持了。于是我们应该去 Makefile 修改一下，因为我配置的是我机器的环境，而且没用 cmake。所以要手动修改，把我机器上的 boost 路径目录换成你的就可以了。比如如果是 mac 的话，把 ifeq 中的 <code>$(CC) $(LINK_FLAGS) -L/usr/local/Cellar/boost/1.60.0_2/lib/ ....</code> 里边的目录换成你自己的就行。如果是 linux，就把 else 中的 <code>$(CC) $(LINK_FLAGS) -L/usr/lib/x86_64-linux-gnu/</code> 换成你自己的。不过如果是 ubuntu，八成不需要改，因为目录的版本无关。其他的 linux 就不知道了。</li>
@@ -380,7 +381,9 @@
 <li>于是应该就完事了。直接跑 make -j 8 啥的 8 线程编译就可以。当然如果你是虚拟机，虚拟内存没配置够的话就算了，直接跑 make -j 2 或者 make -j 3 这种就行了。</li>
 <li>之后 <code>bin</code> 目录会出现 <code>wind_jvm</code> 这个 executable file。注意：一定要在 <code>wind_jvm/</code> 目录运行 <code>./bin/wind_jvm Test1</code> 这样的命令。因为内部我的 system lib path 是通过当前路径来获取的。如果不在 <code>wind_jvm/</code> 目录下跑，就应该会报错。然后我给了十几个 TestX.java 文件，执行 <code>make test</code> 就能编译。有一个 Test7.java 是不行的。那个只有 debug version jvm 的工具才能编译。所以我编译好了直接放上去了。然后运行 <code>./bin/wind_jvm Test1</code> 这种命令就好。不加 <code>.class</code> 后缀，参数必须有且仅有一个。</li>
 <li>然后就可以玩了。不过只支持特定实现好的库，你要 socket 什么的都是没有的。不过日后实现看情况可以往上加，你也可以来 pull request 哦。</li>
-<li>如果有 issue 请在 github 上上传 issue。<h2 id="特性支持"><a href="#特性支持" class="headerlink" title="特性支持"></a>特性支持</h2></li>
+<li>如果有 issue 请在 github 上上传 issue。</li>
+</ol>
+<h2 id="特性支持"><a href="#特性支持" class="headerlink" title="特性支持"></a>特性支持</h2><ol>
 <li>完整的 ClassFileParser。那个 tool 的地址我已经刚才写过了。这东西才 3k 行多一点而已。</li>
 <li>支持大部分常用反射机制。其他的是我没写的。因为太多了……不过想写的话肯定是有的。具体在 <code>src/native/sun_reflect_Reflection.hpp(cpp)</code>，<code>src/native/sun_reflect_NativeConstructorAccessorImpl.hpp(cpp)</code> 等等文件中。</li>
 <li>支持底层的 Unsafe 类中的大部分。如果想要支持 jdk 类库，这个类是必须要写且必须实现的。这个类可以添加 java 不能而 C++ 能的指针操作。必须强行交换两个对象什么的。当然，还需要有少量 CAS support。并发非常必要。</li>
@@ -388,16 +391,23 @@
 <li>支持异常机制。stack unwind 栈回溯，athrow 以及可以 catch 字节码已经处理好的异常表。Test7.java 就是测试多线程异常的。</li>
 <li>支持 GC。parallel GC 支持的保证是 stop-the-world (调 bug 可是好长好长时间好痛苦哇)，使用了 GC-Root 算法，以及 GC 复制算法。见：<a href="https://github.com/wind2412/wind_jvm/blob/master/src/runtime/gc.cpp" target="_blank" rel="external">gc.cpp</a>……虽然代码量不大确是调试时间最长最难受的部分……毕竟这不是单线程 GC，是多线程的……不过我的实现肯定也是 too young 的，因为并没有各种菊苣的 paper 的支持。</li>
 <li>部分支持 lambda，比如简单的 invokedynamic 类似 <code>Thread t = new Thread(() -&gt; System.out.println(&quot;hello world&quot;));</code>，Test4,5,6,8,11,13 是测试 lambda 和 invoke(MethodHandle) 的。不过很遗憾这一部分理解有些跟不上，虽然支持是比较容易，但是想要理解类库究竟是怎么实现 lambda，还需要积累和进一步研究。因此只能支持部分。[注：部分测试用例 from network]。具体实现代码请见：<a href="https://github.com/wind2412/wind_jvm/blob/master/src/runtime/bytecodeEngine.cpp#L3385-L3544" target="_blank" rel="external">invokedynamic</a>。当然不可能只有这点。这里是核心部分。还有待支持更多。</li>
-<li>字节码方面，支持绝大多数，没用到的就没写（怕写错），wide 指令这种，我是没加的。<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2></li>
+<li>字节码方面，支持绝大多数，没用到的就没写（怕写错），wide 指令这种，我是没加的。</li>
+</ol>
+<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><ol>
 <li>和 openjdk 一样的，klass oop 二分模型。</li>
 <li>解释型。完全在解释 bytecode。因此效率上肯定差强人意。</li>
 <li>按照真正的 jvm 跑 class 文件的流程运行（几乎）。初始化 mirror，初始化基础类，使用 C++ 实现的 bootstraploader，进而调用 java 的 AppClassLoader 来加载 main class。</li>
 <li>每个线程配上了不同的颜色（，方便观看（其实更重要的是方便调试哇。（笑）</li>
-<li>等等。细节太多了。如果你想看更多的细节，下文有字节码执行的流程输出。<h2 id="糟粕"><a href="#糟粕" class="headerlink" title="糟粕"></a>糟粕</h2></li>
+<li>等等。细节太多了。如果你想看更多的细节，下文有字节码执行的流程输出。</li>
+</ol>
+<h2 id="糟粕"><a href="#糟粕" class="headerlink" title="糟粕"></a>糟粕</h2><ol>
 <li>一开始什么也不会的时候，用字符串查找类……这是特别悲伤的设计。严重拖慢速度，历史遗留问题。</li>
 <li>有时跑 Test7 这种多线程测试用例碰到异常的时候，最后会段错误。其实是完全可以解决的。用 pthread_cancel 配上 pthread_join 就可以完全解决。不过一开始的设计是没考虑到这么多，直接把所有线程 detach 了。如果要改，势必代码的形状会特别悲伤。所以左思右想还是维持原状，并不影响运行结果。其实这样是并不对的，java 要求某一线程抛异常，不会影响其他线程的执行。其实真正的实现是要用 join 的。</li>
-<li>等等。<h2 id="输出细节"><a href="#输出细节" class="headerlink" title="输出细节"></a>输出细节</h2>如果想要开启更多的细节，可以在 Makefile 中修改，原本是 <code>CPP_FLAGS := -std=c++14 -O3 -pg</code>，我在后边写了一个加上 <code>-DBYTECODE_DEBUG -DDEBUG</code> 的，启用这个就可以启用所有的字节码调试代码。引用一张月初放在博客上的图:<br><img src="https://wind2412.files.wordpress.com/2017/12/b7976a42d4d265ec2c89f1f11f6c3f69.jpg" alt="IMAGE"><br>如果还要看 classfile 的文件 parse，运行时常量池的解析，以及字符串池的常量字符串，可以打开 <code>-DKLASS_DEBUG -DPOOL_DEBUG -DSTRING_DEBUG</code> 宏，然后重新编译就好。<br>不过！如果这么打开，由于一开始初始化虚拟机，需要加载各种类，需要跑各种字节码，输出会是巨量的。没记错的话跑一个 hello world 貌似就要上十w的字节码执行量吧。因为我是解释型，自然执行的机器码比这还多；如果是编译型，那就快了。所以如果发现终端吃不消，请及时关闭。后期由于字节码输出量巨大，我从来都是关闭这些宏的，只看结果忽略执行过程。<h2 id="写文章的目的"><a href="#写文章的目的" class="headerlink" title="写文章的目的"></a>写文章的目的</h2>为了骗 star（，同时也是为了交友（。希望有同样爱好和兴趣的童鞋能够一起偷(yu)税(yue)地交流。那么就写到这吧。同时发到博客和知乎。<h2 id="最终的感谢"><a href="#最终的感谢" class="headerlink" title="最终的感谢"></a>最终的感谢</h2>感谢这个领域的先驱们，感谢各种热心的回复，感谢给我思路和灵感的人们。（热泪盈眶）<br>尤为感谢《spec》《深入java虚拟机》《hotspot实战》的作者们，以及R大的论坛和R大在知乎上传播的各种深入的虚拟机知识。实在是感激不尽！<br>另：<br>就是一个区区玩具，就不胡乱@了。供学习和交流～随便乱加了一个开源协议，虽然没什么用处。</li>
+<li>等等。</li>
 </ol>
+<h2 id="输出细节"><a href="#输出细节" class="headerlink" title="输出细节"></a>输出细节</h2><p>如果想要开启更多的细节，可以在 Makefile 中修改，原本是 <code>CPP_FLAGS := -std=c++14 -O3 -pg</code>，我在后边写了一个加上 <code>-DBYTECODE_DEBUG -DDEBUG</code> 的，启用这个就可以启用所有的字节码调试代码。引用一张月初放在博客上的图:<br><img src="https://wind2412.files.wordpress.com/2017/12/b7976a42d4d265ec2c89f1f11f6c3f69.jpg" alt="IMAGE"><br>如果还要看 classfile 的文件 parse，运行时常量池的解析，以及字符串池的常量字符串，可以打开 <code>-DKLASS_DEBUG -DPOOL_DEBUG -DSTRING_DEBUG</code> 宏，然后重新编译就好。<br>不过！如果这么打开，由于一开始初始化虚拟机，需要加载各种类，需要跑各种字节码，输出会是巨量的。没记错的话跑一个 hello world 貌似就要上十w的字节码执行量吧。因为我是解释型，自然执行的机器码比这还多；如果是编译型，那就快了。所以如果发现终端吃不消，请及时关闭。后期由于字节码输出量巨大，我从来都是关闭这些宏的，只看结果忽略执行过程。</p>
+<h2 id="写文章的目的"><a href="#写文章的目的" class="headerlink" title="写文章的目的"></a>写文章的目的</h2><p>为了骗 star（，同时也是为了交友（。希望有同样爱好和兴趣的童鞋能够一起偷(yu)税(yue)地交流。那么就写到这吧。同时发到博客和知乎。</p>
+<h2 id="最终的感谢"><a href="#最终的感谢" class="headerlink" title="最终的感谢"></a>最终的感谢</h2><p>感谢这个领域的先驱们，感谢各种热心的回复，感谢给我思路和灵感的人们。（热泪盈眶）<br>尤为感谢《spec》《深入java虚拟机》《hotspot实战》的作者们，以及R大的论坛和R大在知乎上传播的各种深入的虚拟机知识。实在是感激不尽！<br>另：<br>就是一个区区玩具，就不胡乱@了。供学习和交流～随便乱加了一个开源协议，虽然没什么用处。</p>
 
       
     </div>
