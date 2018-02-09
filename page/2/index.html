@@ -287,6 +287,202 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/10/设计模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wind2412">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blue_sky.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wind2412的部落格✨～">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/10/10/设计模式/" itemprop="url">
+                  设计模式
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-10T15:09:10+08:00">
+                2017-10-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>学习设计模式的途中，看各种网上的资料和博客，也积累了一点东西，拿出来分享一下～</p>
+<hr>
+<h1 id="创建型设计模式"><a href="#创建型设计模式" class="headerlink" title="创建型设计模式"></a>创建型设计模式</h1><ol>
+<li>Singleton<br> <a href="http://blog.csdn.net/haoel/article/details/4028232" target="_blank" rel="external">很好的博客，在多线程方面讲的非常透彻。</a></li>
+<li><p>Builder</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Builder</span> </span>&#123;</div><div class="line"> 	<span class="keyword">protected</span> String name;</div><div class="line"> 	<span class="keyword">protected</span> <span class="keyword">int</span> level;</div><div class="line"></div><div class="line"> 	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</div><div class="line"> 		<span class="keyword">this</span>.name = name;</div><div class="line"> 	&#125;</div><div class="line"> 	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setLevel</span><span class="params">(<span class="keyword">int</span> level)</span> </span>&#123;</div><div class="line"> 		<span class="keyword">this</span>.level = level;</div><div class="line"> 	&#125;</div><div class="line"> 	<span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Instance <span class="title">build</span><span class="params">()</span></span>;</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Director</span> </span>&#123;</div><div class="line"> 	<span class="keyword">protected</span> Builder builder;</div><div class="line"> 	<span class="keyword">protected</span> String name;</div><div class="line"></div><div class="line"> 	<span class="function"><span class="keyword">public</span> <span class="title">Director</span><span class="params">(Builder builder)</span> </span>&#123;</div><div class="line"> 		<span class="keyword">this</span>.builder = builder;</div><div class="line"> 	&#125;</div><div class="line"></div><div class="line"> 	<span class="function"><span class="keyword">public</span> Instance <span class="title">construct</span><span class="params">(Args...args)</span> </span>&#123;</div><div class="line"> 	  builder.setName(args[<span class="number">0</span>]);</div><div class="line"> 	  builder.setLevel(args[<span class="number">1</span>]);</div><div class="line"> 	  ......</div><div class="line"> 	  <span class="keyword">return</span> builder.build();</div><div class="line"> 	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 和工厂方法的不同在于：builder 还有一个 director 来使用内部的 builder 来协助维持总体的组装。</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>Prototype</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 原型模式实际上就在于实现 Cloneable 接口。能够让对象进行深拷贝，而不用一个一个全部重新构造。</span></div><div class="line"><span class="comment">// 不过，要注意防止循环引用的现象发生。</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>Abstract Factory<br> <a href="http://www.runoob.com/design-pattern/abstract-factory-pattern.html" target="_blank" rel="external">抽象工厂</a></p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">抽象工厂是 “工厂的工厂”。这类抽象的工厂通过传入的参数来返回工厂对象。因而这类抽象工厂是 “工厂的产生器”。</div><div class="line">工厂内部可以产生不同类型的对象。这些对象在被继承的时候，可以把没有关系但是却又不得不继承的方法设置为空方法。</div></pre></td></tr></table></figure>
+</li>
+<li><p>Factory<br> <a href="http://www.runoob.com/design-pattern/factory-pattern.html" target="_blank" rel="external">工厂</a></p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">工厂类顾名思义，其实就是创建一个工厂来通过传入的参数来返回创建好的产品对象。比较常用。这个工厂只生产一个借口下的多个子类。而 Abstract Factory 可以生产多个不同接口类下的子方法。</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<hr>
+<h1 id="行为型设计模式"><a href="#行为型设计模式" class="headerlink" title="行为型设计模式"></a>行为型设计模式</h1><ol>
+<li><p>Strategy</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 使用[继承体系]，继承同一个接口，只不过每种子类有不同的实现。然后通过把这继承体系的对象当做参数，可以选择不同的算法。其实就像 C++ STL 中的非标准的 std::add, std::sub, std::mul 等等。每个重载 operator() 都是不同的算法。通过把这些 adaptor 传递给接受他们的函数，就可以相当于使用这些算法了。</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>State</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// State 首先是一个接口而引发的继承体系。State 会有多种。</span></div><div class="line"><span class="comment">// 其实吧，如果我有一个 boy 对象，他的状态发生了改变的话，明明是 boy 自身的变动，却由程序员[我]来手动调用 boy.setState(new BadState()) 来帮他上状态，确实很诡异...... 所以这里，为了符合语义也一定要反过来。也就是，状态 State 占主导，接收参数来改变 boy。即：</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">BadState</span> <span class="keyword">extends</span> <span class="title">State</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">doAction</span><span class="params">(Boy boy)</span> </span>&#123;</div><div class="line">    boy.setState(<span class="keyword">this</span>);   <span class="comment">// 还是这样顺眼一些......</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Chain of Responsibility (责任链模式)<br> <a href="http://www.runoob.com/design-pattern/chain-of-responsibility-pattern.html" target="_blank" rel="external">真是玄奥……并不明白它会被应用在哪里……</a></p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 其实本质上是一个链表结构。然后每个节点被封装了一个 level，节点内部有一个处理责任链的方法，这个方法是递归实现的，接收另一个 need_level 参数，会对每个接下来的节点进行处理。整个链表上 this.level &gt; need_level 的节点都将会被忽略掉。也就是传入参数 need_level 是紧急的程度。紧急程度越高，就越会激活大部分的责任链了。</span></div><div class="line">这个还要好好看一看复习下咯。</div></pre></td></tr></table></figure>
+</li>
+<li><p>Interpreter<br> <a href="http://www.runoob.com/design-pattern/interpreter-pattern.html" target="_blank" rel="external">解释器模式……parse 成 AST……</a></p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">额呵呵呵......写一个解释器 ????? 有待考察......</div></pre></td></tr></table></figure>
+</li>
+<li><p>Command<br> <a href="http://www.runoob.com/design-pattern/command-pattern.html" target="_blank" rel="external">命令模式：把函数的执行包装成一个对象！</a></p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 这样把 “函数的执行动作” 变得 “实体化” 了，就可以实现数据库的事务等等了。这样，任务的执行都是被记录的，而且可以批量进行执行。</span></div><div class="line"><span class="comment">// 统括思想：创建一个具有继承体系的 “命令对象”，本质是一个接口继承而来。这个通用的统一接口下，类似策略模式以及配接器模式，会对要被执行的函数进行一个封装，即把不同的策略封装在不同的类产生的对象中，但是接口统一地去进行【持久化】。然后，如果要执行一套连续的动作的话，只需要把保存在 list 中的这些对象统一取出来，再进行逐一遍历，然后调用统一的接口函数即可。</span></div><div class="line">【在学习设计模式的时候，如果想要学得深入的话，就要先想想如果是自己的话，会怎么做。然后再学习前人们的成果，最后还一定要多加重复才行。】</div><div class="line"><span class="comment">// 比如我有一个类，它有多种动作：</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Action</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">buy</span><span class="params">()</span></span>;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">sell</span><span class="params">()</span></span>;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 为了把这些瞬时的 “动作” 持久化成为 “永久的”，我们创建一套 Order (命令)类组合：</span></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Order</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">executeAction</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">BuyOrder</span> <span class="keyword">implements</span> <span class="title">Order</span></span>&#123;</div><div class="line">  <span class="keyword">private</span> Action a;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">BuyOrder</span><span class="params">(Action a)</span></span>&#123;</div><div class="line">    <span class="keyword">this</span>.a = a;</div><div class="line">  &#125;</div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">executeAction</span><span class="params">()</span></span>&#123;</div><div class="line">    a.buy();      <span class="comment">// 这样的话，一个 “过程” 就被封装成为了一个类对象了！！再包装一层永远是解决问题的策略。</span></div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SellOrder</span> <span class="keyword">implements</span> <span class="title">Order</span></span>&#123;</div><div class="line">  <span class="keyword">private</span> Action a;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">SellOrder</span><span class="params">(Action a)</span></span>&#123;</div><div class="line">    <span class="keyword">this</span>.a = a;</div><div class="line">  &#125;</div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">executeAction</span><span class="params">()</span></span>&#123;</div><div class="line">    a.sell();</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EatOrder</span> <span class="keyword">implements</span> <span class="title">Order</span></span>&#123;</div><div class="line">  <span class="keyword">private</span> Action a;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">EatOrder</span><span class="params">(Action a)</span></span>&#123;</div><div class="line">    <span class="keyword">this</span>.a = a;</div><div class="line">  &#125;</div><div class="line">  <span class="meta">@Override</span></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">executeAction</span><span class="params">()</span></span>&#123;</div><div class="line">    a.eat();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Observer</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">可以对应 Java GUI 中的 “通知” 的 action。适用于一个组件发生了改变，然后可以对多个其他的组件进行主动通知的设计模式。当然，需要这被通知的多个组件具有相同的接口才行！！比如，都实现了统一的 update() 方法！要不，如果方法签名都不统一，上哪去调用去......</div></pre></td></tr></table></figure>
+</li>
+<li><p>Memento (备忘录模式)<br> <a href="http://www.runoob.com/design-pattern/memento-pattern.html" target="_blank" rel="external">Memento</a></p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">可以适用于游戏存档的场合。</div><div class="line">里边有 <span class="number">3</span> 个类：Memento(包装一个 state 的结构)、Originator(产生 Memento 的工厂)、CareTaker(一个 Memento 的 list)。记住这三点，就非常简单。而 CareTaker 是通过操纵 Originator 来间接产生 Memento 对象存档的。</div></pre></td></tr></table></figure>
+</li>
+<li><p>Iterator</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">STL 中全部如此。略了。</div></pre></td></tr></table></figure>
+</li>
+<li><p>Template Method</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">在 <span class="keyword">abstract</span> 基类中定义一个 <span class="keyword">public</span> <span class="keyword">final</span> 方法作为指定好的模板算法骨架，这个骨架会按某种顺序调用此类的其他方法。而继承此 <span class="keyword">abstract</span> 类的子类，只需要重写这些 “其他方法” 就可以了。</div><div class="line"></div><div class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Template</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">first</span><span class="params">()</span></span>;</div><div class="line">  <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">second</span><span class="params">()</span></span>;</div><div class="line">  <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">third</span><span class="params">()</span></span>;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">executeInOrder</span><span class="params">()</span></span>&#123;</div><div class="line">    first();    <span class="comment">// 执行模板已经定义好，**必须**按照顺序执行。子类只需要重写 first(), second(), third() 即可。</span></div><div class="line">    second();</div><div class="line">    third();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Visitor<br><a href="https://zhuanlan.zhihu.com/p/25581709" target="_blank" rel="external">Parser 的 Visitor 设计模式</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 轮大讲的非常好～</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">IVisitor</span>&#123;</span></div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    <span class="keyword">virtual</span> ~IVisitor() = <span class="keyword">default</span>;</div><div class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">visit</span><span class="params">(ValueExpr *node)</span> </span>= <span class="number">0</span>;</div><div class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">visit</span><span class="params">(AddExpr *node)</span> </span>= <span class="number">0</span>;</div><div class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">visit</span><span class="params">(MulExpr *node)</span> </span>= <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Expr</span>&#123;</span></div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    <span class="keyword">virtual</span> ~Expr() = <span class="number">0</span>;</div><div class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(IVisitor *visitor)</span> </span>= <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ValueExpr</span> :</span> <span class="keyword">public</span> Expr&#123;</div><div class="line">  <span class="keyword">public</span>:           <span class="comment">// 注意：数据全是 public 的。如果要设置 private，请设置 IVisitor 为友元。</span></div><div class="line">    <span class="keyword">double</span> value;</div><div class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(IVisitor *visitor)</span> override</span>&#123;</div><div class="line">      visitor-&gt;visit(<span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">AddExpr</span> :</span> <span class="keyword">public</span> Expr&#123;</div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;Expr&gt; x;</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;Expr&gt; y;</div><div class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(IVisitor *visitor)</span> override</span>&#123;</div><div class="line">      visitor-&gt;visit(<span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MulExpr</span> :</span> <span class="keyword">public</span> Expr&#123;</div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;Expr&gt; x;</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;Expr&gt; y;</div><div class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(IVisitor *visitor)</span> override</span>&#123;  <span class="comment">// 接受参观者</span></div><div class="line">      visitor-&gt;visit(<span class="keyword">this</span>);   <span class="comment">// 参观者进行访问动作，即改写 visitor 自身的 result</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EvalVisitor</span> :</span> <span class="keyword">public</span> IVisitor&#123;</div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    <span class="keyword">double</span> result;</div><div class="line">    <span class="function"><span class="keyword">double</span> <span class="title">call</span><span class="params">(Expr *node)</span> </span>&#123; <span class="comment">// visitor 呼叫(通知，也就是按门铃)被参观者叫他接受 (accpet) 自己 (给自己开门)</span></div><div class="line">      node-&gt;accept(<span class="keyword">this</span>);</div><div class="line">      <span class="keyword">return</span> result;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">visit</span><span class="params">(ValueExpr *node)</span> override</span>&#123;</div><div class="line">      result = node-&gt;value;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">visit</span><span class="params">(AddExpr *node)</span> override</span>&#123; <span class="comment">// 已经进入了 AddExpr</span></div><div class="line">      result = call(node-&gt;x.get()) + call(node-&gt;y.get()); <span class="comment">// 还想访问 AddExpr 内部的两个元素。</span></div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">visit</span><span class="params">(MulExpr *node)</span> override</span>&#123;</div><div class="line">      result = call(node-&gt;x.get()) + call(node-&gt;y.get());</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">Eval</span><span class="params">(<span class="built_in">shared_ptr</span>&lt;Expr&gt; node)</span> </span>&#123;</div><div class="line">  EvalVisitor visitor;</div><div class="line">  node-&gt;accept(&amp;visitor); <span class="comment">// accept 才是真的入口？？？</span></div><div class="line">  <span class="keyword">return</span> visitor.result;  <span class="comment">// 其实这两句写成一句 call 也行。不过一般 call 都是被设置成为 private 的吧。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Mediator (中介者模式)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 中介者模式顾名思义，其实就是提供了一个中介，来降低双方通信的复杂度。在双方要进行通信的时候，都会调用中介者来显示信息。</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Chatroom</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="title">showMessage</span><span class="params">(String msg)</span> </span>&#123; sysout...; &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">sendMsg</span><span class="params">(String msg)</span> </span>&#123;</div><div class="line">    Chatroom.showMessage(msg);    <span class="comment">// 这样。直接调用中介者 Chatroom 显示在 Chatroom 的屏幕上。</span></div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span> <span class="params">(String[] args)</span> </span>&#123;</div><div class="line">  User jack = <span class="keyword">new</span> User();</div><div class="line">  User tom = <span class="keyword">new</span> User();</div><div class="line">  jack.sendMsg(<span class="string">"hello!"</span>);</div><div class="line">  tom.sendMsg(<span class="string">"hi!"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<hr>
+<h1 id="结构型设计模式"><a href="#结构型设计模式" class="headerlink" title="结构型设计模式"></a>结构型设计模式</h1><ol>
+<li><p>Decorator<br> Java IO 中经常用到。BufferedInputStream 等其实就是对底层 IO 的封装。<br> 在继承体系当中，<strong>子类含有一个接口类的对象，虽然这个子类也是接口类的对象。</strong></p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Worker</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">work</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">implements</span> <span class="title">Worker</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;</div><div class="line">    ...</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mother</span> <span class="keyword">implements</span> <span class="title">Worker</span></span>&#123;</div><div class="line">  <span class="keyword">private</span> Worker worker;  <span class="comment">// 内部有一个接口对象，可能是 Son。</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Mother</span><span class="params">(Worker worker)</span></span>&#123;</div><div class="line">    <span class="keyword">this</span>.worker = worker;</div><div class="line">  &#125;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;</div><div class="line">    worker.work();  <span class="comment">// 基于内部的 worker 写好的 work 进行 [装饰扩展]。</span></div><div class="line">    ... <span class="comment">// 扩展</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Proxy</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 套路和上边的 Decorator 很像，不过它的目的并不是用于加强，而是用于控制。</span></div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Worker</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">work</span><span class="params">()</span></span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">implements</span> <span class="title">Worker</span></span>&#123;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;</div><div class="line">    ...</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">WorkerProxy</span> <span class="keyword">implements</span> <span class="title">Worker</span></span>&#123;  <span class="comment">// 也要继承 Worker。因为要保持接口一致。</span></div><div class="line">  <span class="keyword">private</span> Son son = <span class="keyword">null</span>;   <span class="comment">// 对象是固定的 Son。因为是此类是针对 特定类 特化的 代理类。</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="title">WorkerProxy</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">// nothing</span></div><div class="line">  &#125;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (son == <span class="keyword">null</span>) &#123;</div><div class="line">      son = <span class="keyword">new</span> Son();    <span class="comment">// 没有的话就创建。相当于 Lazy Singleton。</span></div><div class="line">    &#125;</div><div class="line">    son.work();   <span class="comment">// 不增强。而是直接调用 son。这就是个代理，要尊重原作，并不像 Decorator 一样加以修改。</span></div><div class="line">                  <span class="comment">// 第二次调用此 work 方法，son 就不必 new 了。这点和 Decorator 差不多。</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Composite</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">类比于文件系统。</div><div class="line">所有的一切，包括容器类全都继承自同一个接口。适用于树形结构。</div><div class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">File</span> </span>&#123;</div><div class="line">  ...</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Folder</span> <span class="keyword">extends</span> <span class="title">File</span> </span>&#123;</div><div class="line">  File[] files;</div><div class="line">  ...</div><div class="line">&#125;;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">TXT</span> <span class="keyword">extends</span> <span class="title">File</span></span>&#123;</div><div class="line">  ...</div><div class="line">&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PNG</span> <span class="keyword">extends</span> <span class="title">File</span></span>&#123;</div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Bridge<br> <a href="http://www.runoob.com/design-pattern/bridge-pattern.html" target="_blank" rel="external">Bridge</a></p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> <span class="comment">// 调用方式：(先写出调用方式可能更好一些。)</span></div><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">   Shape redCircle = <span class="keyword">new</span> Circle(<span class="number">100</span>,<span class="number">100</span>, <span class="number">10</span>, <span class="keyword">new</span> RedCircle());</div><div class="line">   Shape greenCircle = <span class="keyword">new</span> Circle(<span class="number">100</span>,<span class="number">100</span>, <span class="number">10</span>, <span class="keyword">new</span> GreenCircle());</div><div class="line"></div><div class="line">   redCircle.draw();</div><div class="line">   greenCircle.draw();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 其中 Circle 是直接继承于 Shape 的。RedCircle 和 GreenCircle 是直接实现于 DrawAPI 的。</span></div><div class="line"><span class="comment">// Circle.draw() 的时候，内部会直接调用成员变量 RedCircle.drawAPI() 和 GreenCircle.drawAPI() 来进行转发。</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>Adapter</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">配接器模式，在 STL 中用得非常多。比如 vector -&gt; stack，还是 std::bind2nd 等等。</div></pre></td></tr></table></figure>
+</li>
+<li><p>Flyweight (享元模式)</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">其实就是使用 HashMap 来保存和提取公有对象而已。和 STL 的 map 的 operator[] 原理简直一模一样。</div><div class="line">当然，非常有可能和 [工厂模式] 以及 [单例模式] 联协使用。可以用一个 Singleton 的 Factory 内部包装一个 HashMap 的意思～</div></pre></td></tr></table></figure>
+</li>
+<li><p>Facade (外观模式)<br> <a href="http://www.runoob.com/design-pattern/facade-pattern.html" target="_blank" rel="external">Facade</a></p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 用 Shape 这个接口产生 Circle，Rectangle 以及 Square 三个类型，共有 draw() 接口。</span></div><div class="line"><span class="comment">// 为了隐藏逐个调用的复杂性，使用一个更高层次的类 ShapeMaker 来封装，client 不必知道系统内部的复杂性，整个系统只需要提供一个封装好的 “接待员” 即可。</span></div><div class="line"></div><div class="line"><span class="comment">// 这段代码比较能够反映核心，因而拷贝过来。</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ShapeMaker</span> </span>&#123;</div><div class="line">   <span class="keyword">private</span> Shape circle;</div><div class="line">   <span class="keyword">private</span> Shape rectangle;</div><div class="line">   <span class="keyword">private</span> Shape square;</div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="title">ShapeMaker</span><span class="params">()</span> </span>&#123;</div><div class="line">      circle = <span class="keyword">new</span> Circle();</div><div class="line">      rectangle = <span class="keyword">new</span> Rectangle();</div><div class="line">      square = <span class="keyword">new</span> Square();</div><div class="line">   &#125;</div><div class="line"></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drawCircle</span><span class="params">()</span></span>&#123;</div><div class="line">      circle.draw();</div><div class="line">   &#125;</div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drawRectangle</span><span class="params">()</span></span>&#123;</div><div class="line">      rectangle.draw();</div><div class="line">   &#125;</div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drawSquare</span><span class="params">()</span></span>&#123;</div><div class="line">      square.draw();</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/08/Java-字节码-class-文件解析：写一个-javap-工具/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1584,133 +1780,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/25/Linus的链表/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="wind2412">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/blue_sky.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="wind2412的部落格✨～">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/25/Linus的链表/" itemprop="url">
-                  Linus的链表
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-25T09:19:34+08:00">
-                2017-04-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="Linus的链表"><a href="#Linus的链表" class="headerlink" title="Linus的链表"></a>Linus的链表</h1><p>首先放链接：<a href="http://open.163.com/movie/2016/6/3/9/MBPNHJU6K_MBR358639.html" target="_blank" rel="external"> TED演讲—Linus </a><br>偶然看到了这个TED，看到Linus聚聚的神一般的链表删除操作，不用分情况讨论，简直是大开眼界……有感而发，写下一篇博文写下感受。最好还是先看下TED～听Linus聚聚谈人生是一种享受。<br>我们先假定我们的API设计是链表结构完全有序的插入。也就是，每次插入都插入在完全正确、使链表有序的位置上。如果我们调用<code>insert(5)</code>插入在<code>[1, 2, 6, 7]</code>的链表上，那么链表最终会变成<code>[1, 2, 5, 6, 7]</code>的状态。<br>按照我们正常的思维，链表应该是这样的：<br>（注：一个结点上一行是结点名称，下一行是类型名称。）<br><img src="https://wind2412.files.wordpress.com/2017/04/draggedimage.png" alt="pic1"><br><img src="https://wind2412.files.wordpress.com/2017/04/draggedimage-1.png" alt="pic2"><br>于是我们有了两种情况。但是实际上仔细一看，第二种<code>NULL</code>的情况是包含在第一种之中的。因为我们移动链表指针的时候，一定是做<code>while(temp &amp;&amp; temp-&gt;data &lt; target_data)</code>形式的循环体的。也就是：最终<code>temp</code>一定会停留在<code>NULL</code>或者<code>≥target_data</code>的第一个位置的。也就是，插入的正确位置。所以其实两种情况是一样的。因此我们只需要看第一种就好。于是就如下图：<br><img src="https://wind2412.files.wordpress.com/2017/04/draggedimage-2.png" alt="pic3"><br>1.这里是我们在头结点插入的情况。非常简单啊。因为我们插入<code>0</code>，那么<code>temp</code>最终必然在<code>1</code>的位置上了。这样，我们只要利用<code>head</code>结点，就可以完成插入操作啦！<br><img src="https://wind2412.files.wordpress.com/2017/04/draggedimage-3.png" alt="pic4"><br>2.这里是我们在中间插入的情况。我们要插入<code>4</code>这个数。但是因为我们的<code>temp</code>正好就在需要插入的位置，也就是<code>new Node</code>的<code>next</code>有着落啦。但是我们的前一个结点必须重定位到新插入的<code>new Node</code>上去。可是我们并没有这种<code>pre</code>指针。也就是，仅仅使用一个指针，<code>3</code>这个点根本没法衔接到<code>4</code>的身上。好麻烦啊！于是解决办法就是，我们必须要使用一个<code>pre</code>和一个<code>next</code>指针来定位辅助操作，像这样：<br><img src="https://wind2412.files.wordpress.com/2017/04/draggedimage-4.png" alt="pic5"><br>卧槽。这简直神烦啊。光是插入操作就需要两种讨论=&gt;头插和中间插。鉴于尾插和中间插是相同的（也就是<code>next</code>指针是<code>NULL</code>而已），可以省略尾插的讨论。那删除呢？删除也是一样的。头删除和中间删除。Linus在TED中说，头删除和中间删除是两种完全不同的情况。确实如此。。。（掀桌）</p>
-<p>于是Linus大神给我们了另一种方法！！利用二级指针！<br>简洁起见，先上图讨论链表的改版：<br><img src="https://wind2412.files.wordpress.com/2017/04/draggedimage-5.png" alt="pic6"><br><img src="https://wind2412.files.wordpress.com/2017/04/qq20170419-0024592x.png" alt="pic7"><br>（请注意指针指向的位置）<br>如图我们看到，不同于正常链表在于，这里创建了一个<code>Node**</code>类型的指针。这个指针有神马用处呢？特别神奇。因为它能够帮助我们使用类似“隔山打牛”的手段，<strong>远程地</strong>操纵链表结构，达到不必在插入和删除的时候需要分情况讨论的效果。<br>首先我们由图中可以看到。<code>head</code>结点一定是<code>Node*</code>类型的指针，不必多说。而我们在<code>head</code>的上边又创建了一个<code>Node**</code>的指针指向了<code>head</code>。和刚才正常思路的讨论不同的是，这里的<code>temp</code>是<code>Node**</code>类型了。当我们插入的时候，循环判断的条件变成了：<code>while(*temp &amp;&amp; (*temp)-&gt;data &lt; target_data)</code>了。其实和刚才的<code>while(temp &amp;&amp; data &lt; target_data)</code>是一样的。但是不同的是：<strong>这时的<code>temp</code>的位置，由正好指向“需要插入位置”的尴尬位置变成了“指向那个尴尬位置的位置”！也就是说，我们的<code>pre</code>结点有着落了！</strong>接下来，我们还继续讨论头插和中间插两种情况：先二话不说上图 =。=！<br><img src="https://wind2412.files.wordpress.com/2017/04/draggedimage-6.png" alt="pic8"><br>1.头插。<br>可不要以为和上边的图是一样的。其实我只是把里边结点值改成了<code>1</code>、<code>3</code>和<code>5</code>而已（大雾）<br>于是我们可以看见，原先的情况是，如果我（<code>Node*</code>）判断成功，我就挪到跟我判断的结点的位置，这样就保证了退出循环时<code>temp</code>一定是在需要插入的位置，这就非常尴尬了。然而，经由我们的新的判断条件<code>(*temp)-&gt;data &lt; target_data</code>，我们是在远程发动解引用的能力判断大小的，我们<code>temp</code>的类型是<code>Node**</code>，因此最后一定会指向一个<code>next (Node*类型)</code>指针的。因此，最终退出循环的时候，<code>temp</code>一定是在需要插入结点的前边！因此可以完美解决～<br>2.中间插<br><img src="https://wind2412.files.wordpress.com/2017/04/draggedimage-7.png" alt="pic9"><br>按照刚才的分析，<code>temp</code>一定会停留在这里～于是<code>pre</code>指针就有啦！有了<code>pre</code>，还怕没有<code>next</code>吗？所以轻松地，根本不需要第二个一级指针，只需要一个二级指针就可以完美解决啦～～二话不说上图！<br><img src="https://wind2412.files.wordpress.com/2017/04/draggedimage-8.png" alt="pic10"><br>最后的<code>next</code>指针是可以经由<code>pre</code>指针得到的！所以，经由这样的操作，我们根本就不需要第二个指针啦！也就是，我们只需要讨论一种情况，就可以完整地把头插和中间插合二为一咯！</p>
-<p>当然，口说无凭～还是要列代码的！<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span>&#123;</span></div><div class="line">	<span class="keyword">int</span> data;</div><div class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span>* <span class="title">next</span>;</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> *<span class="title">head</span> = <span class="title">NULL</span>;</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">int</span> data)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> *<span class="title">node</span> = (<span class="title">struct</span> <span class="title">ListNode</span> *)<span class="title">malloc</span>(<span class="title">sizeof</span>(<span class="title">struct</span> <span class="title">ListNode</span>));</span></div><div class="line">	node-&gt;data = data;</div><div class="line">	node-&gt;next = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> **<span class="title">temp</span> = &amp;<span class="title">head</span>;</span></div><div class="line">	<span class="keyword">while</span>(temp &amp;&amp; *temp &amp;&amp; (*temp)-&gt;data &lt; data)&#123;</div><div class="line">		temp = &amp;(*temp)-&gt;next;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> *<span class="title">next</span> = *<span class="title">temp</span>;</span></div><div class="line"></div><div class="line">	*temp = node;</div><div class="line">	(*temp)-&gt;next = next;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">delete</span><span class="params">(<span class="keyword">int</span> data)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> **<span class="title">temp</span> = &amp;<span class="title">head</span>;</span></div><div class="line">	<span class="keyword">while</span>(temp &amp;&amp; *temp)&#123;</div><div class="line">		<span class="keyword">if</span> ((*temp)-&gt;data == data) &#123;</div><div class="line">			<span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> *<span class="title">node</span> = *<span class="title">temp</span>;</span></div><div class="line">			*temp = node-&gt;next;</div><div class="line">			<span class="built_in">free</span>(node);</div><div class="line">			<span class="keyword">return</span>;</div><div class="line">		&#125;<span class="keyword">else</span> <span class="keyword">if</span>((*temp)-&gt;data &gt; data)&#123;	<span class="comment">//失败</span></div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		temp = &amp;(*temp)-&gt;next;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span> *<span class="title">temp</span> = <span class="title">head</span>;</span></div><div class="line">	<span class="keyword">while</span>(temp)&#123;</div><div class="line">		<span class="built_in">printf</span>(<span class="string">"%d "</span>, temp-&gt;data);</div><div class="line">		temp = temp-&gt;next;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></div><div class="line">&#123;</div><div class="line">	insert(<span class="number">3</span>);</div><div class="line">	insert(<span class="number">2</span>);</div><div class="line">	insert(<span class="number">1</span>);</div><div class="line">	insert(<span class="number">5</span>);</div><div class="line">	insert(<span class="number">5</span>);</div><div class="line">	insert(<span class="number">5</span>);</div><div class="line">	<span class="keyword">delete</span>(<span class="number">5</span>);</div><div class="line">	<span class="keyword">delete</span>(<span class="number">1</span>);</div><div class="line">	print();</div><div class="line">	<span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1755,7 +1829,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1834,8 +1908,8 @@
       <div class="footer-inner">
         <div class="copyright" >
   
-  &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
