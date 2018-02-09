@@ -108,17 +108,17 @@
 
 
 
-<meta name="description" content="https://github.com/a10y/hsdis-macos wget 一下，然后把 hsids-amd64.dylib 放到 /Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home/jre/lib/server/ 目录下，用 java -XX:+UnlockDiagnosticVMOptions -XX:+Pri">
+<meta name="description" content="别人家的仓库 wget 一下，然后把 hsids-amd64.dylib 放到 /Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home/jre/lib/server/ 目录下，用 java -XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly &amp;lt;Java Main Clas">
 <meta name="keywords" content="JVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="编译 hsdis mac 版本，打印 jvm 执行时汇编信息">
 <meta property="og:url" content="http://yoursite.com/2018/02/09/编译-hsdis-mac-版本，打印-jvm-执行时汇编信息/index.html">
 <meta property="og:site_name" content="wind2412的部落格✨～">
-<meta property="og:description" content="https://github.com/a10y/hsdis-macos wget 一下，然后把 hsids-amd64.dylib 放到 /Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home/jre/lib/server/ 目录下，用 java -XX:+UnlockDiagnosticVMOptions -XX:+Pri">
-<meta property="og:updated_time" content="2018-02-09T11:52:43.762Z">
+<meta property="og:description" content="别人家的仓库 wget 一下，然后把 hsids-amd64.dylib 放到 /Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home/jre/lib/server/ 目录下，用 java -XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly &amp;lt;Java Main Clas">
+<meta property="og:updated_time" content="2018-02-09T11:54:53.742Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="编译 hsdis mac 版本，打印 jvm 执行时汇编信息">
-<meta name="twitter:description" content="https://github.com/a10y/hsdis-macos wget 一下，然后把 hsids-amd64.dylib 放到 /Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home/jre/lib/server/ 目录下，用 java -XX:+UnlockDiagnosticVMOptions -XX:+Pri">
+<meta name="twitter:description" content="别人家的仓库 wget 一下，然后把 hsids-amd64.dylib 放到 /Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home/jre/lib/server/ 目录下，用 java -XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly &amp;lt;Java Main Clas">
 
 
 
@@ -361,7 +361,7 @@
       
 
       
-        <p><a href="https://github.com/a10y/hsdis-macos" target="_blank" rel="external">https://github.com/a10y/hsdis-macos</a></p>
+        <p><a href="https://github.com/a10y/hsdis-macos" target="_blank" rel="external">别人家的仓库</a></p>
 <p>wget 一下，然后把 hsids-amd64.dylib 放到 <code>/Library/Java/JavaVirtualMachines/jdk1.8.0_161.jdk/Contents/Home/jre/lib/server/</code> 目录下，用 <code>java -XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly &lt;Java Main Class Name(no suffix)&gt;</code> 即可。<br>以及放在 debug 版本：<code>~/jvm/jdk8_mac/build/macosx-x86_64-normal-server-slowdebug/images/j2sdk-bundle/jdk1.8.0.jdk/Contents/Home/jre/lib/server</code> 目录下，但是这时候要指定：<code>export LD_LIBRARY_PATH=~/jvm/jdk8_mac/build/macosx-x86_64-normal-server-slowdebug/images/j2sdk-bundle/jdk1.8.0.jdk/Contents/Home/jre/lib/server</code> 才行，要不链接找不到。之后 <code>java1 -XX:+PrintAssembly &lt;Java Main Class Name(no suffix)&gt;</code> 即可。详见：<a href="http://yueyemaitian.iteye.com/blog/2042772。" target="_blank" rel="external">http://yueyemaitian.iteye.com/blog/2042772。</a></p>
 <p>唉……其实在我的机器上并没有编译成功，错误信息比较诡异。所以请用上边取巧的办法。<br><del><a href="https://www.chrisnewland.com/building-hsdis-amd64dylib-on-mac-osx-376" target="_blank" rel="external">https://www.chrisnewland.com/building-hsdis-amd64dylib-on-mac-osx-376</a><br>最后需要加一个参数 ARCH=amd64…… 要不一直默认编译 i386 的……<br>用 clang 编译的，不会有问题。</del></p>
 
