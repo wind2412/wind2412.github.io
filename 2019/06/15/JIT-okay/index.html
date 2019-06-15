@@ -108,17 +108,17 @@
 
 
 
-<meta name="description" content="在 wind_jvm 上的即时编译器在今年的 4 月 19 日完成了。并不打算放在 github 上。学到了很多的东西，对 JIT 有了新的认识。毕设答辩前夕，不由得唏嘘不已。从 HIR 到 LIR，从静态单赋值的建立到解构。cliff click 大神的 GCM 算法，简直是拯救了这个编译器，哈哈。它让我的 HIR 能够成功编译成 LIR。当时琢磨怎样将一个图形态的 IR 编译到混合形态的低层">
+<meta name="description" content="在 wind_jvm 上的即时编译器在今年的 4 月 4 日完成了。并不打算放在 github 上。学到了很多的东西，对 JIT 有了新的认识。毕设答辩前夕，不由得唏嘘不已。从 HIR 到 LIR，从静态单赋值的建立到解构。Cliff Click 大神的 GCM 算法，简直是拯救了这个编译器，哈哈。它让我的 HIR 能够成功编译成 LIR。当时琢磨怎样将一个图形态的 IR 编译到混合形态的低层 I">
 <meta name="keywords" content="编译">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JIT okay~">
 <meta property="og:url" content="http://yoursite.com/2019/06/15/JIT-okay/index.html">
 <meta property="og:site_name" content="wind2412的部落格✨～">
-<meta property="og:description" content="在 wind_jvm 上的即时编译器在今年的 4 月 19 日完成了。并不打算放在 github 上。学到了很多的东西，对 JIT 有了新的认识。毕设答辩前夕，不由得唏嘘不已。从 HIR 到 LIR，从静态单赋值的建立到解构。cliff click 大神的 GCM 算法，简直是拯救了这个编译器，哈哈。它让我的 HIR 能够成功编译成 LIR。当时琢磨怎样将一个图形态的 IR 编译到混合形态的低层">
-<meta property="og:updated_time" content="2019-06-15T11:08:27.300Z">
+<meta property="og:description" content="在 wind_jvm 上的即时编译器在今年的 4 月 4 日完成了。并不打算放在 github 上。学到了很多的东西，对 JIT 有了新的认识。毕设答辩前夕，不由得唏嘘不已。从 HIR 到 LIR，从静态单赋值的建立到解构。Cliff Click 大神的 GCM 算法，简直是拯救了这个编译器，哈哈。它让我的 HIR 能够成功编译成 LIR。当时琢磨怎样将一个图形态的 IR 编译到混合形态的低层 I">
+<meta property="og:updated_time" content="2019-06-15T11:21:03.787Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JIT okay~">
-<meta name="twitter:description" content="在 wind_jvm 上的即时编译器在今年的 4 月 19 日完成了。并不打算放在 github 上。学到了很多的东西，对 JIT 有了新的认识。毕设答辩前夕，不由得唏嘘不已。从 HIR 到 LIR，从静态单赋值的建立到解构。cliff click 大神的 GCM 算法，简直是拯救了这个编译器，哈哈。它让我的 HIR 能够成功编译成 LIR。当时琢磨怎样将一个图形态的 IR 编译到混合形态的低层">
+<meta name="twitter:description" content="在 wind_jvm 上的即时编译器在今年的 4 月 4 日完成了。并不打算放在 github 上。学到了很多的东西，对 JIT 有了新的认识。毕设答辩前夕，不由得唏嘘不已。从 HIR 到 LIR，从静态单赋值的建立到解构。Cliff Click 大神的 GCM 算法，简直是拯救了这个编译器，哈哈。它让我的 HIR 能够成功编译成 LIR。当时琢磨怎样将一个图形态的 IR 编译到混合形态的低层 I">
 
 
 
@@ -361,7 +361,7 @@
       
 
       
-        <p>在 wind_jvm 上的即时编译器在今年的 4 月 19 日完成了。并不打算放在 github 上。<br>学到了很多的东西，对 JIT 有了新的认识。<br>毕设答辩前夕，不由得唏嘘不已。<br>从 HIR 到 LIR，从静态单赋值的建立到解构。<br>cliff click 大神的 GCM 算法，简直是拯救了这个编译器，哈哈。它让我的 HIR 能够成功编译成 LIR。当时琢磨怎样将一个图形态的 IR 编译到混合形态的低层 IR，也是挺痛苦的，哈哈。头发掉了一斤。<br>生成 X86 平台的机器码也非常的有趣。<br>过几天看看心情，把论文的东西发一部分上来。心情不好就算了。<br>哎呀。真是不错的一段时光。<br>虽然不知道以后会如何，但是还是乐观些吧。<br>突然想到，博客不设置评论才是最好的。邮件才是交流的好方式。<br>还是非常期待的。就先这样吧。</p>
+        <p>在 wind_jvm 上的即时编译器在今年的 4 月 4 日完成了。并不打算放在 github 上。<br>学到了很多的东西，对 JIT 有了新的认识。<br>毕设答辩前夕，不由得唏嘘不已。<br>从 HIR 到 LIR，从静态单赋值的建立到解构。<br>Cliff Click 大神的 GCM 算法，简直是拯救了这个编译器，哈哈。它让我的 HIR 能够成功编译成 LIR。当时琢磨怎样将一个图形态的 IR 编译到混合形态的低层 IR，也是挺痛苦的，哈哈。头发掉了一斤。<br>线性寄存器分配也是非常有意思，让人难受的有意思。可能是自己的功力不够吧。还是要多努力啊。Christian Wimmer 大神真的是强啊。人家的硕士论文。比不了啊。<br>生成 X86 平台的机器码也非常的有趣。<br>过几天看看心情，把论文的东西发一部分上来。心情不好就算了。<br>哎呀。真是不错的一段时光。<br>虽然不知道以后会如何，但是还是乐观些吧。<br>突然想到，博客不设置评论才是最好的。邮件才是交流的好方式。<br>还是非常期待的。就先这样吧。</p>
 
       
     </div>
