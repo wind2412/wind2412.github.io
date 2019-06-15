@@ -287,6 +287,126 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/15/JIT-okay/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wind2412">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/blue_sky.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="wind2412的部落格✨～">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2019/06/15/JIT-okay/" itemprop="url">
+                  JIT okay~
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-15T19:00:54+08:00">
+                2019-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在 wind_jvm 上的即时编译器在今年的 4 月 19 日完成了。并不打算放在 github 上。<br>学到了很多的东西，对 JIT 有了新的认识。<br>毕设答辩前夕，不由得唏嘘不已。<br>从 HIR 到 LIR，从静态单赋值的建立到解构。<br>cliff click 大神的 GCM 算法，简直是拯救了这个编译器，哈哈。它让我的 HIR 能够成功编译成 LIR。当时琢磨怎样将一个图形态的 IR 编译到混合形态的低层 IR，也是挺痛苦的，哈哈。头发掉了一斤。<br>生成 X86 平台的机器码也非常的有趣。<br>过几天看看心情，把论文的东西发一部分上来。心情不好就算了。<br>哎呀。真是不错的一段时光。<br>虽然不知道以后会如何，但是还是乐观些吧。<br>突然想到，博客不设置评论才是最好的。邮件才是交流的好方式。<br>还是非常期待的。就先这样吧。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/09/编译-hsdis-mac-版本，打印-jvm-执行时汇编信息/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1460,250 +1580,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/15/Design-Pattern-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="wind2412">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/blue_sky.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="wind2412的部落格✨～">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/10/15/Design-Pattern-2/" itemprop="url">
-                  Design Pattern 2
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-15T23:32:10+08:00">
-                2017-10-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>之前的笔记实在是有些简陋，如今要正式地重来一遍咯！</p>
-<ol>
-<li>Observer<br><img src="https://wind2412.files.wordpress.com/2017/10/1312de348af17c9be249c3ab6be49d9d5.jpg" alt="IMAGE">￼<br>如 UML 图所见，Subject 和 Object 都是接口，仅仅定义了对于模式实现的方法，而 ConcreteSubject 和 ConcreteObject 才是实现类。</li>
-</ol>
-<ul>
-<li>对象模型：Subject 中含有一个 Object 的 List，代表它要通知的 Objects。而每一个 Object 中含有一个对自己 Subject 的引用。</li>
-<li><code>pull模式</code>：Subject 中的 <code>Notify()</code> 方法以及 Object 中的 <code>Update()</code> 方法才是重点。<code>Subject::Notify()</code> 使用轮询的方式来调用它内部每个 Object 的 <code>Object::Update()</code> 方法。而 <code>Object::Update()</code> 方法往往又调用 Subject 的 <code>Subject::getState()</code> 方法来拉取状态。其实这就是 Observer 的 <code>pull方法</code>，即由 Observer 自身去拉取的手段。</li>
-<li><code>push模式</code>：当然对应地，还有种实现手段是 <code>push方法</code>。即 Subject 调用 <code>Subject::Notify()</code> 开启 <code>Object::Update()</code> 的时候。传入自身的 State 进去。这样 Object 在实现 <code>Object::Update()</code> 的时候，就不去要从 Subject 中 pull 来，因为 Subject 已经 push 过去了。但是这样实现，弹性比较小，正常的标准还是 <code>pull模式</code>。</li>
-</ul>
-<ol>
-<li>Strategy<br><img src="https://wind2412.files.wordpress.com/2017/10/fce70ae306b54ea1b7b6b5b6fd290b5b5.jpg" alt="IMAGE">￼<br>如 UML 图所见，Strategy 是接口类，仅仅定义了 strategy 接口。而同一层继承体系下，分化出来多个 ConcreteStrategy 类。</li>
-</ol>
-<ul>
-<li>对象模型：Context 的内部内含一个 Strategy 对象的引用。而 Strategy 是一个接口体系，可以在同一层继承下分化出来多个 SubStrategy。</li>
-<li>过程：举 awt 的栗子来说：<br><img src="https://wind2412.files.wordpress.com/2017/10/8d1cf8f82e31ee611840d3bddd9057745.jpg" alt="IMAGE">￼<br>“<code>Java
-JFrame jframe(…); // JFrame 是 Container 的一个子对象，即 Context
-jFrame.setLayout(new FlowLayout()); // 添加一个 Strategy 到 Context 中。
-jframe.add(new JButton()); // JFrame::add 方法会在内部调用 FlowLayout 的 Strategy 方法，产生一种布局模式。
-“</code></li>
-<li>更多的栗子：同样的栗子还有：Sorter 内部存放一个 SorterStrategy 的引用，可以赋值为 SorterStrategy 体系下的 SubStrategy，必须 BinarySortStrategy 对象，BubbleSortStrategy 对象，HeapSortStrategy 对象等等。<br><img src="https://wind2412.files.wordpress.com/2017/10/56f57bc0b7c0fb8ff0175350742298695.jpg" alt="IMAGE">￼</li>
-<li>还有游戏一进去就有的选择困难等级：容易、中等、难、困难、修罗模式这种，也是策略模式的体现！</li>
-</ul>
-<ol>
-<li>Factory<br><img src="https://wind2412.files.wordpress.com/2017/10/30edc0e01dc0e46bfd304a7c148629155.jpg" alt="IMAGE">￼<br>如 UML 图所见，Product 是一个抽象产品类，下方有继承的 ConcreteProduct 实体的产品类。Creator 是接口工厂，内含多态的 <code>Creator::FactoryMethod</code> 方法，返回一个集成体系下的顶层抽象产品类 <code>Product</code>。ConcreteCreator 是实体工厂，用于生产 ConcreteProduct。</li>
-</ol>
-<ul>
-<li>对象模型：Creator 工厂内部没有任何成员变量，只有工厂方法。但是 Creator 工厂内部的方法可以全是 static 的。这就是一种变种，叫做<strong>静态工厂</strong>。好处在于，不用创建工厂的实体对象了～</li>
-<li>变种1：简单的工厂方法：不需要写抽象的 Creator，因为体系比较简单，直接上来就是一个简单的<strong>实体+静态</strong>工厂。<br><img src="https://wind2412.files.wordpress.com/2017/10/caee8f1c304c496071c1651af4f905425.jpg" alt="IMAGE">￼</li>
-<li>变种2：对于生产同一个继承体系的多种产品，可以在工厂中只写一个方法，内部使用 <code>if…elif…else</code> 的手段，最后产生的对象挂接到高层产品接口的句柄上返回。<br><img src="https://wind2412.files.wordpress.com/2017/10/fe8365b2de82f7458eab45e955db7a1b5.jpg" alt="IMAGE">￼<br>如图，此 Concrete Factory 的 <code>produce()</code> 方法签名返回高层的 Product。</li>
-<li>变种3：Product <strong>接口</strong>自己就是一个工厂，可以使用多态(子Product 中分别实现)产生继承体系下的多种类型的 ConcreteProduct。当然，这个多态工厂方法必然返回 <code>Product*</code> 的句柄就是，而且可以使用 <code>static</code> 静态方法。<br><img src="https://wind2412.files.wordpress.com/2017/10/883674d07e93c884378e08391d7408225.jpg" alt="IMAGE">￼</li>
-<li>变种4：ConcreteProduct 本身是一个工厂，可以产生自己。(我们只有一种产品)<br><img src="https://wind2412.files.wordpress.com/2017/10/d912ac56240eb34fb7fb7738a44d9c225.jpg" alt="IMAGE">￼</li>
-<li>用途：Java 框架中的依赖注入(IoC中) 等等。</li>
-</ul>
-<ol>
-<li>Abstract Factory<br><img src="https://wind2412.files.wordpress.com/2017/10/76a70e7dcedf267ef963bb7468975d395.jpg" alt="IMAGE">￼<br>和 Factory 的不同之处仅仅在于，</li>
-</ol>
-<ul>
-<li>Abstract Factory 是把工厂自身当做产品的。即，<strong>生产工厂的工厂</strong>。</li>
-<li>Abstract Factory 由于有上边的这种性质，因此它不再局限于只能像 Factory 一样仅仅能够生产一个体系中的 Product。通过生产出不同类别的工厂，它能够自扩展而生产别的体系的 Product。我们从 UML 图即可看出。</li>
-<li>缺点：支持新种类的 Product 变得很麻烦了。</li>
-</ul>
-<ol>
-<li>Decorator<br><img src="https://wind2412.files.wordpress.com/2017/10/cf598de9f6bc240de26a397558351b735.jpg" alt="IMAGE">￼<br>如 UML 图可见，最高层是一个抽象类 Component。它下方<strong>一定有一个</strong>直属的子类 ConcreteComponent，要不 Decorator 无法使用了。因为 Decorator 虽然也继承 Component，但是它的内部也有一个 Component 的句柄引用！那个句柄引用的正体显而易见就是那个直属的 ConcreteComponent。因为装饰者模式的策略就是：<strong>在同一继承体系中，使用已经实现好的子类，在新的子类中扩展它的功能，变成新的功能。</strong></li>
-</ol>
-<ul>
-<li>对象模型：ConcreteComponent 成员变量不能有同类的 Component 句柄，但是 Decorator 的内部必须有一个同类的 Component 句柄！因为 Decorator 要对 ConcreteComponent 的功能进行扩展，从而衍生出自己的新功能，而不用完全从头来写。Decorator 的构造函数要传递一个被扩展的同体系的对象，UML 图中即是 ConcreteComponent。</li>
-<li>经典用途：Java 的 IO 系统。比如 BufferedInputStream 啥的都是继承自上层的 InputStream，但是自己构造的时候又要接收一个 InputStream 对象。<br><img src="https://wind2412.files.wordpress.com/2017/10/ec3f046a48a6b71d7a10d88e93891da95.jpg" alt="IMAGE">￼</li>
-<li>这也就给出了：<strong>为什么不在类上用继承进行扩展呢</strong> 这个问题的真正答案。很简单，<strong>因为装饰者模式比继承要灵活，弹性更大</strong>。像我们的 BufferedInputStream，既可以接收别的 FileInputStream，也可以满足比如来自 Socket 的 socket.getInputStream() 的接收这样的场景。所以，如果上层有其他的 InputStream 体系的实现，BufferedInputStream 这个装饰者可以对他们进行<strong>统一扩展</strong>，而不再仅仅局限于继承的<strong>仅仅扩展一个InputStream</strong>。这样弹性会变得非常巨大～</li>
-</ul>
-<ol>
-<li>Singleton<br><img src="https://wind2412.files.wordpress.com/2017/10/50c2e92f282a4c20e6452fe9f296d7af5.jpg" alt="IMAGE">￼<br>这个实在是基础中的基础，不讲了。但是在多线程之下，Java 中 Singleton 模式也是有很多大坑的，尤其是 LazyEvaluation。<br><a href="http://blog.csdn.net/haoel/article/details/4028232" target="_blank" rel="external">单例模式的博客</a><br><strong>不过要换成 C++，就连 Eager Singleton 也有大坑！！！</strong><br>一开始，我认为只有这样，用 <code>shared_ptr</code> 智能指针才行：<br>“`cpp<br>// 错误的 Singleton 范例！！<br>class Singleton{<br>private:<br>static shared_ptr singleton;<br>Singleton() {}<br>public:<br>static shared_ptr getSingleton() {<br>return singleton;<br>}<br>};</li>
-</ol>
-<p>shared_ptr Singleton::singleton = shared_ptr(new Singleton); // 用原生指针 new 一个 static 变量，最后会造成内存无法释放而泄漏。<br>“<code>上边的想法确实在我自己看来是还中规中矩的……不过这两天正好读完了 Scott Meyers 的 Effective C++……其中的第四条款指出，static 这种全局变量，虽然会在使用时初始化，但是和 Java 也有本质的不同。Java 的话，在虚拟机 JVM 进行类加载的时候，会有一个“类的初始化”期，这期间会直接初始化所有 static 变量和 static 块。因此，Eager Singleton 在 Java 中可谓是天然适配，上来就默认多线程友好；但是 C++ 不一样……确实在调用之前，static 也会初始化；但是 C++ 标准并没有规定 **多个编译单元中 static 的初始化顺序**！！也就是，在多个模块中，non-local static 变量的初始化顺序是未知的！具体原因请直接看 Meyers 的 Effective C++ Item 04。因此，Meyers 指出，在 C++ 想要 Singleton 安全，必须把 non-local static 变成一个 local static，其实表现形式上，变成了一个**工厂函数**！更改后的程序见下：
-“</code>cpp<br>// 正确的 Eager Singleton，而且不再使用恶心的 static new！<br>class Singleton{<br>private:<br>Singleton();<br>Singleton(const Singleton &amp;);<br>Singleton&amp; operator= (const Singleton &amp;);<br>~Singleton();<br>public:<br>static Singleton&amp; getSingleton() {<br>static Singleton singleton;<br>return singleton;<br>}<br>};// 注意一定要注销掉 copy constructor 以及 constructor 还有 assignment operator！！要不，最后会发生可以拷贝的愚蠢现象……比如 Singleton s = getSingleton()，因为调用的是拷贝构造函数……所以必须 private 化。因为 C++ 可以分配在栈上，因此和 Java 全是堆引用不同～<br>“`<br>参考了一个博客：<a href="http://www.zkt.name/dan-li-mo-shi-singleton-ji-c-shi-xian/" target="_blank" rel="external">ZKT的笔记本</a>，在我迷惑的时候它帮助了我。当然，虽然还没有看，但是《Modern C++ Design》中用 TMP 来 hack 各种设计模式也非常令人憧憬～<br>至此单例模式完成……没想到竟然引申出了这么多东西……颇有收获～<br>多例模式的话，就 new 一个 ArrayList 就可以。布局和 FlyWeight 模式有点像，不过那个的内部是一个 HashMap。</p>
-<ol>
-<li>Command<br><img src="https://wind2412.files.wordpress.com/2017/10/2e97319afd4ddc3eba303d08f697b9d95.jpg" alt="IMAGE">￼<br>如 UML 图可见，Client 客户端先要创建一个具有<strong>各种</strong>动作的 Receiver，虽然 GOF 只画了一个 Action()。其实内部可以有 ActionEat()，ActionDrink()，ActionPlay() 等。而 Command 的分化也可以有 ConcreteEatCommand，ConcreteDrinkCommand 以及 ConcretePlayCommand 等分化类，用于持久化各种 Action 命令。</li>
-</ol>
-<ul>
-<li>对象模型：Command 是一个抽象类，内部有一个引用的成员 Receiver 和一个 Execute 方法，Execute 旨在调用 <code>多个 receiver.action()</code>，从而把 <code>receiver.action()</code> 延后化。即，把 <code>receiver.action()</code> 这个瞬间的调用给封装成了一个 Command 对象藉以持久化，达到推迟 <code>receiver.action()</code> 执行的最终目的。ConcreteCommand 是一个实现类。Invoker 其实就是一个 List 的封装，把所有的动作全都使用 Command 延时化，然后集结到一块，通过 <code>Invoker::invoke()</code> 来进行一块执行所有 Command 达到最终的延时操作 actions 的目的，即 MacroCommand。</li>
-<li>变种：Undo and Redo：<br>可以通过和 <code>Command::Execute()</code> 方法并列编写一个 <code>Command::Undo()</code> 方法。比如 <code>Command::Execute() { receiver.turnOnLightAction(); }</code>，那么 <code>Command::Undo() { receiver.turnOffLightAction(); }</code> 就可以被如此实现。</li>
-<li>用途：执行一系列延时操作；打 Log。</li>
-</ul>
-<ol>
-<li>Adapter</li>
-</ol>
-<ul>
-<li>类配接器：<br><img src="https://wind2412.files.wordpress.com/2017/10/e56b2aa09933ce0b15f10a8553fbcdf45.jpg" alt="IMAGE">￼<br>如 UML 图可见，Adaptee 是一个我们原本拥有的、但是和正规接口不符的要被配接的对象。我们使用多继承，继承自 Target 和 Adaptee，产生一个新的 Adapter，实现 Target 的正规接口，内部只要调用 <code>Adaptee::SpecificRequest()</code> 即可。其实十分简单。</li>
-<li>对象配接器：<br><img src="https://wind2412.files.wordpress.com/2017/10/720cb5b7588de99cbba8591f81d801485.jpg" alt="IMAGE">￼<br>如 UML 图可见，Adapter 使用了<strong>聚合</strong>的方式代替了<strong>继承</strong>的方式。STL 中的容器配接器 stack 也是这么实现的。同样，在 <code>Adapter::Request()</code> 中直接调用 <code>Adaptee::SpecificRequest()</code> 即可。</li>
-</ul>
-<ol>
-<li>Facade<br><img src="https://wind2412.files.wordpress.com/2017/10/dd29d76640a3ad798d850cf165b29ea65.jpg" alt="IMAGE">￼<br><img src="https://wind2412.files.wordpress.com/2017/10/60840b6915e310bd41f35c597047b67d5.jpg" alt="IMAGE">￼<br>外观模式更像一种软件的<strong>架构模式</strong>，因此没有 UML 图。外观模式其实在我的理解类似于<strong>模块化</strong>，通过<strong>模块化</strong>的方式来定制多种模块接口，来呈现出美观的外观。<strong>子系统内部的任何变化不会影响到 Facade 接口的变化</strong>！</li>
-<li>Template Method<br><img src="https://wind2412.files.wordpress.com/2017/10/c139a82646cce7bf8eefa811e2e2cd675.jpg" alt="IMAGE">￼<br>如 UML 图可见，我们在一个抽象类 AbstractClass 中写下 <code>TemplateMethod()</code> 方法，内部指定代码逻辑的实现，分别按顺序调用 <code>PrimitiveOperation1</code> 和 <code>PrimitiveOperation2</code> 这两个方法。然后后二者使用多态，可以在子类中自由变更。但是 <code>TemplateMethod()</code> 方法永远保持不变。</li>
-</ol>
-<ul>
-<li>应用：<code>HttpServlet</code> 中的 <code>doGet()</code>，<code>doPost()</code> 等多种方法。注意它们的命名用 <code>do-</code> 前缀开头。而且在 Servlet 的大逻辑的实现中，这些 <code>do-</code> 方法是按照 TemplateMethod 模式，按照一定的逻辑进行调用的。我们所更改的只是 <code>doGet()</code> 和 <code>doPost()</code> 的内部逻辑，但是外部的大框架逻辑并没有改变！</li>
-</ul>
-<ol>
-<li>Iterator<br><img src="https://wind2412.files.wordpress.com/2017/10/14e23d3cdf0170d021302d2dd20071c45.jpg" alt="IMAGE">￼<br>迭代器分有内部、外部、静态、动态多种。不过大多数都是内部的“标准”迭代器。C++ STL 完全基于迭代器，让容器的遍历和容器自身完全分离开来，而且可以让外部无法知道容器内部的细节。几乎是最常用的设计模式之一，不过多解释了。</li>
-<li>Compose<br><img src="https://wind2412.files.wordpress.com/2017/10/285bac2a709397cceea0e8ec0604f3725.jpg" alt="IMAGE">￼<br>组合模式最常见的就是树形结构。其实它的结构和 Decorator 有些像，但是作用是天壤之别。</li>
-</ol>
-<ul>
-<li>例子：这个模式用例子来解释是最好的，就是文件系统。抽象的文件类就是 Component 这个抽象组件节点类，而 File 就是 Leaf，Folder 就是 Composite：它的内部含有一个 <code>List</code>，即 Folder 中可以含有 File，更可以含有其他 Folder。那么这个 UML 图就非常明了了。注意 Compose 模式的重点是树形结构就好。</li>
-</ul>
-<ol>
-<li>State<br><img src="https://wind2412.files.wordpress.com/2017/10/f8f4476696a6fca66a1e7175002951a45.jpg" alt="IMAGE">￼<br>状态模式和策略模式比较像。只不过，Strategy 模式中，一个 state 对应多个 Strategy；而 State 模式中，多个 State 都有自己的不同的行为。<br><img src="https://wind2412.files.wordpress.com/2017/10/bff35faa62e1430a019da7c33ad1134a5.jpg" alt="IMAGE">￼<br>如上图，每个 Tool 子类都重写了 Tool 接口的四个方法。其实这和 Strategy 真的差不多。只不过 State 模式不同对象代表不同的状态，而 Strategy 总体是在一个大状态之下，而选择了不同的 Strategy 而已。</li>
-<li>Proxy<br><img src="https://wind2412.files.wordpress.com/2017/10/5b47674319622e5d539b8d37bd249fa95.jpg" alt="IMAGE">￼<br>由此 UML 图可见，Proxy 和 RealSubject 都继承自 Subject 这个抽象类。都有 Request 方法。而 Proxy 的内部具有一个 RealSubject 的句柄，而 <code>Proxy::Request()</code> 的内部则是调用了 <code>realSubject-&gt;Request()</code>。即，Proxy 代理 RealSubject 来进行 RealSubject 的职务。</li>
-</ol>
-<ul>
-<li>用途：比如网络的代理软件、操作系统的软链接、智能指针等等。</li>
-</ul>
-<ol>
-<li>FlyWeight<br><img src="https://wind2412.files.wordpress.com/2017/10/e1582dcbab60854bcd2b7e69afcdf4485.jpg" alt="IMAGE">￼<br>FlyWeight 模式一般都自带一个工厂，工厂一般都可以是 Singleton Factory，内部一般存放一个 HashMap。其实在个人看来，C++ 的 <code>map</code> 就非常符合 FlyWeight 的观念，尤其是它重载的 <code>operator []</code>。FlyWeight 模式在向内调用 <code>FlyWeightFactory::GetKey(Key key)</code> 方法的时候，如果 key 在内部的 HashMap 中已经存放过，那么就直接取出来<strong>它的句柄</strong>，把句柄返回去。如果没有存放过，那么就把此 Key 的句柄放到 HashMap 中存放。</li>
-<li>Builder<br><img src="https://wind2412.files.wordpress.com/2017/10/7188b5194eab3777f3ca91bf0e11876f5.jpg" alt="IMAGE">￼</li>
-</ol>
-<ul>
-<li>对象模型：Builder 模式中，有一个 Director 占据主导地位。<code>Director::construct()</code> 是拼装组件的入口函数。Director 内部有一个 Builder 的 reference。Director 通过调用 <code>builder.buildPartA, builder.buildPartB, builder.buildPartC</code> 在 builder 内部产生多个组件。而这个 <code>Builder::retrieveInstance</code> 内部会由 Builder 内部所维护的成员变量 <code>partA, partB, partC</code> 来进行 construct 出一个 Product。<strong>注意：在 Builder 内部维护的成员变量仅仅是成员组件 partA/B/C，只有在 retrieveInstance 的时候才会真的生成一个 Product</strong>。</li>
-<li>如果把 Director 省略掉，那么就和 Factory 差不多了。不过 construct 函数要被从 Director 中迁移到 Builder 中，并且必须在 retrieveInstance 之前调用。</li>
-</ul>
-<ol>
-<li>Chain of Responsiblity<br><img src="https://wind2412.files.wordpress.com/2017/10/5d578416becac7dc0b76953784e5edc15.jpg" alt="IMAGE">￼</li>
-</ol>
-<ul>
-<li>对象模型：Handler 类本质上是一个单向链表，next 即是自己。内部含有 <code>HandleRequest()</code> 方法，用来处理这个 Handler。当然，Handler 可以派生出多种类型，然后共同组成一个链。<code>HandleRequest()</code> 是会对此节点及之后的所有节点做处理的。所以只要在第一个节点处调用 <code>HandleRequest()</code> 即可。</li>
-</ul>
-<ol>
-<li>Mediator<br><img src="https://wind2412.files.wordpress.com/2017/10/708294e4ad7e9589d9428b566c2739695.jpg" alt="IMAGE">￼<br>中介者模式主要是为了避免过度耦合的现象发生的。比如同事，在软件工程的原理中，如果没有中介人，那么同事之间要两两互相认识，太麻烦了。因此中介人即是起到保存所有同事的作用；而且每个同事之中还要保存中介人的引用。</li>
-</ol>
-<ul>
-<li>对象模型：如上边所说，每个 College 之中要保存 Mediator；而 Mediator 中保存了所有的 Colledges。</li>
-</ul>
-<ol>
-<li>Bridge<br><img src="https://wind2412.files.wordpress.com/2017/10/4b705ee83c2e02890742b823e1f71cb25.jpg" alt="IMAGE">￼<br>Wikipedia：如“圆形”、“三角形”归于抽象的“形状”之下，而“画圆”、“画三角”归于实现行为的“画图”类之下，然后由“形状”调用“画图”。<br>即：将类的功能层次结构和实现层次结构分离。<br><img src="https://wind2412.files.wordpress.com/2017/10/edf285b882377c3cbe2fe46ce3d2e1705.jpg" alt="IMAGE">￼<br>如图，各个方法的实现全部放在 DisplayImpl 中去，而 Display 和 CountDisplay 中拥有 DisplayImpl 实现方法对象，可以调用 Display 的各个实现方法组合成不同的实现。比如打印一次或者五次。</li>
-<li>Prototype<br><img src="https://wind2412.files.wordpress.com/2017/10/590872f2a29e7491aa7bf16caeba276f5.jpg" alt="IMAGE">￼<br>其实就是 Java 的 Cloneable 接口。根据深拷贝而形成的 Clone 方法。其实和 C++ 的 copy constructor 差不多。但是实现中要防止循环引用的深拷贝。</li>
-<li>Memento<br><img src="https://wind2412.files.wordpress.com/2017/10/dcd6357fca367eab319d1da20bebbf8e5.jpg" alt="IMAGE">￼</li>
-</ol>
-<ul>
-<li>对象模型：备忘录模式具有 Memento、Originator 以及 Caretaker 三个组件。Memento 在这里是一个 bean，内部具有一个 state 成员，标志着状态。而 <code>Originator::SetMemento()</code> 接收一个 Memento，拆包并且把 state 设置为自己的 state。而 <code>Originator::CreateMemento()</code> 会再把 state 封包成一个 Memento 返回出去。而 Caretaker 即是一个 List，存放多个 Memento。</li>
-<li>注意：这三者职责非常明确。Memento 只是一个包装类，只有包装的作用；Originator 原发器具有<strong>读取备忘录</strong> 的作用；而 Caretaker 只有<strong>保存备忘录以及转发</strong>的作用，并没有查看备忘录的权限。</li>
-<li>注意2：概念：宽接口 —— 正常的功能齐全的接口 窄接口 —— 啥功能都没有的接口。对 Originator 会提供 Memento 的宽接口；而对于其他的类则提供 Memento 的窄接口 —— MementoIF。而其实 MementoIF 是定义在全局的，而 Originator 中才定义了 Memento 继承于 MementoIF。也就是，只有 Originator 才能解开 MementoIF 的秘密～<br><a href="https://github.com/LexHsu/Summary/blob/master/07-DesignPatten/book/14-memento.md" target="_blank" rel="external">备忘录模式详解</a></li>
-<li>对所有对象都提供正常的 Memento 的，叫做<strong>白箱 Memento 模式</strong>；而只对于 Originator 才提供正常宽接口 Memento 的，对于其他对象统统提供 MementoIF 的，叫做<strong>黑箱 Memento 模式</strong>。这种模式对于封装性非常有用！！</li>
-</ul>
-<ol>
-<li>Visitor<br><img src="https://wind2412.files.wordpress.com/2017/10/3c931985494c55527214300c5b8d80d15.jpg" alt="IMAGE">￼<br>Visitor 模式非常有用，也很复杂。写 parser 必备。各种 AST 子节点都需要 visitor 模式来进行对子节点的一一访问，配上模板的类型推导可食用。具体代码见我的上一篇博客。</li>
-<li>Interpreter<br><img src="https://wind2412.files.wordpress.com/2017/10/9da4079e58aa31abdafc117162ceaed55.jpg" alt="IMAGE">￼<br>解释器模式就略了。其实就是写一个简单的 parser。非终结符和终结符，就是类似 BNF 范式。</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1753,7 +1629,7 @@ jframe.add(new JButton()); // JFrame::add 方法会在内部调用 FlowLayout �
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1766,7 +1642,7 @@ jframe.add(new JButton()); // JFrame::add 方法会在内部调用 FlowLayout �
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1833,7 +1709,7 @@ jframe.add(new JButton()); // JFrame::add 方法会在内部调用 FlowLayout �
         <div class="copyright" >
   
   &copy;  2017 - 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
